@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,6 +16,15 @@
         .animate-spin-slow {
             animation: spinSlow 15s linear infinite;
         }
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-ticker {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker 20s linear infinite;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-b from-[#e0f2fe] via-[#bae6fd] to-[#7dd3fc] text-slate-900 min-h-screen flex flex-col justify-between font-sans pb-24 select-none">
@@ -25,26 +34,47 @@
         <div class="flex items-center space-x-2">
             <span class="font-black text-xl tracking-wider bg-gradient-to-r from-sky-600 to-blue-700 bg-clip-text text-transparent">AK45</span>
         </div>
-        <div>
-            <button onclick="switchTab('profile')" class="flex items-center space-x-1 bg-white/80 border border-sky-300 px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
-                <i data-lucide="user" class="w-3.5 h-3.5 text-sky-600"></i>
-                <span>Profil</span>
+        <div class="flex items-center space-x-2">
+            <button onclick="switchTab('wallet')" class="flex items-center space-x-1 bg-white/80 border border-sky-300 px-3 py-1 rounded-full text-xs font-semibold shadow-sm cursor-pointer">
+                <i data-lucide="wallet" class="w-3.5 h-3.5 text-sky-600"></i>
+                <span>Wallet</span>
             </button>
+            <button onclick="switchTab('profile')" class="flex items-center space-x-1 bg-white/80 border border-sky-300 px-3 py-1 rounded-full text-xs font-semibold shadow-sm cursor-pointer">
+                <i data-lucide="user" class="w-3.5 h-3.5 text-sky-600"></i>
+                <span>Profile</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- NEWS TICKER BAR -->
+    <div class="bg-sky-900/10 border-b border-sky-200/60 overflow-hidden py-1.5 px-4 text-xs font-medium text-sky-900 flex items-center">
+        <span class="bg-sky-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded mr-2 uppercase tracking-wide flex-shrink-0">News</span>
+        <div class="overflow-hidden relative w-full whitespace-nowrap">
+            <div class="animate-ticker">
+                🚀 AK45 Fan-Token smart contract is officially verified on BNB Smart Chain! &nbsp;&nbsp;&bull;&nbsp;&nbsp; 💎 Invite friends and earn +10% mining bonus! &nbsp;&nbsp;&bull;&nbsp;&nbsp; ⚡️ Global Cloud Mining v2.4 update is now live.
+            </div>
         </div>
     </div>
 
     <!-- MAIN CONTAINER -->
     <div class="px-4 py-4 flex-1 flex flex-col items-center max-w-md mx-auto w-full">
         
-        <!-- BNB Ticker -->
-        <div class="w-full bg-white/70 border border-sky-200 rounded-2xl p-2.5 mb-5 flex justify-between items-center text-xs shadow-sm">
-            <div class="flex items-center space-x-2">
-                <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-500 flex items-center justify-center font-black text-white shadow-sm">B</div>
-                <span class="font-bold text-slate-700">BNB / USD</span>
+        <!-- Crypto Tickers Grid -->
+        <div class="w-full grid grid-cols-2 gap-2 mb-4">
+            <div class="bg-white/70 border border-sky-200 rounded-2xl p-2.5 flex justify-between items-center text-xs shadow-sm">
+                <div class="flex items-center space-x-1.5">
+                    <div class="w-5 h-5 rounded-full bg-amber-400 flex items-center justify-center font-bold text-white text-[10px]">B</div>
+                    <span class="font-bold text-slate-700">AK45/BNB</span>
+                </div>
+                <span class="text-emerald-600 font-semibold">0.00014</span>
             </div>
-            <span class="text-emerald-600 font-semibold flex items-center">
-                $615.40 <i data-lucide="trending-up" class="w-3 h-3 ml-1"></i> +3.12%
-            </span>
+            <div class="bg-white/70 border border-sky-200 rounded-2xl p-2.5 flex justify-between items-center text-xs shadow-sm">
+                <div class="flex items-center space-x-1.5">
+                    <div class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center font-bold text-white text-[10px]">T</div>
+                    <span class="font-bold text-slate-700">AK45/USDT</span>
+                </div>
+                <span class="text-emerald-600 font-semibold">$0.086</span>
+            </div>
         </div>
 
         <!-- TAB 1: HOME -->
@@ -52,129 +82,165 @@
             
             <!-- Balance & Claim -->
             <div class="w-full bg-white/80 border border-sky-200 rounded-2xl p-4 mb-5 text-center shadow-sm">
-                <div class="text-xs text-sky-700 font-medium mb-1">Joriy balans</div>
+                <div class="text-xs text-sky-700 font-medium mb-1">Current Balance</div>
                 <div id="balanceDisplay" class="text-3xl font-black text-sky-900 mb-3">0.00 AK45</div>
-                <button onclick="claimTokens()" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-md transition-transform active:scale-95 flex items-center justify-center space-x-1">
+                <button onclick="claimTokens()" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-md transition-transform active:scale-95 flex items-center justify-center space-x-1 cursor-pointer">
                     <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
-                    <span>Hamyonga o'tkazish (Claim)</span>
+                    <span>Transfer to Wallet (Claim)</span>
                 </button>
                 <p id="claimStatus" class="text-xs text-emerald-600 mt-2 font-semibold"></p>
             </div>
 
             <!-- Mining Status -->
             <div class="text-center mb-3 text-xs">
-                <span>Mayning holati: </span>
-                <span id="miningStatusText" class="font-bold text-amber-600">To'xtatilgan</span>
+                <span>Mining Status: </span>
+                <span id="miningStatusText" class="font-bold text-amber-600">Stopped</span>
             </div>
 
-            <!-- Timer Circle -->
-            <div class="relative w-60 h-60 flex items-center justify-center mb-5">
+            <!-- Timer Circle (Clickable wrapper) -->
+            <div class="relative w-60 h-60 flex items-center justify-center mb-5 cursor-pointer" onclick="startMining()">
                 <div class="absolute inset-0 rounded-full border-4 border-sky-300/40 animate-pulse"></div>
                 <div class="absolute inset-2 rounded-full border-2 border-blue-400/30 border-dashed animate-spin-slow"></div>
                 
-                <div onclick="startMining()" id="miningButton" class="w-52 h-52 rounded-full bg-gradient-to-b from-white to-sky-100 border-4 border-sky-300 flex flex-col items-center justify-center shadow-lg cursor-pointer transition-transform active:scale-95">
+                <div class="w-52 h-52 rounded-full bg-gradient-to-b from-white to-sky-100 border-4 border-sky-300 flex flex-col items-center justify-center shadow-lg transition-transform active:scale-95">
                     <div class="w-10 h-10 rounded-full bg-sky-200/60 flex items-center justify-center mb-1">
                         <i id="zapIcon" data-lucide="zap" class="w-5 h-5 text-slate-400"></i>
                     </div>
                     <div id="timerDisplay" class="text-2xl font-black tracking-wider text-slate-800 mb-1">24:00:00</div>
-                    <div id="timerSubtitle" class="text-[11px] text-sky-700 font-medium px-2 text-center">Boshlash uchun bosing</div>
+                    <div id="timerSubtitle" class="text-[11px] text-sky-700 font-medium px-2 text-center">Click to Start Mining</div>
                 </div>
             </div>
 
             <!-- Stats Grid -->
             <div class="w-full grid grid-cols-2 gap-3 mb-5">
                 <div class="bg-white/80 border border-sky-200 rounded-2xl p-3 text-center shadow-sm">
-                    <div class="text-xs text-sky-700 mb-1">Tezlik</div>
-                    <div id="speedDisplay" class="text-sm font-bold text-slate-800">0.00 AK45/soat</div>
+                    <div class="text-xs text-sky-700 mb-1">Speed</div>
+                    <div id="speedDisplay" class="text-sm font-bold text-slate-800">0.00 AK45/h</div>
                 </div>
                 <div class="bg-white/80 border border-sky-200 rounded-2xl p-3 text-center shadow-sm">
-                    <div class="text-xs text-sky-700 mb-1">24 soatlik limit</div>
+                    <div class="text-xs text-sky-700 mb-1">24h Limit</div>
                     <div class="text-sm font-bold text-slate-800">28 AK45</div>
                 </div>
             </div>
 
             <!-- Global Pool -->
             <div class="w-full bg-white/60 border border-sky-200 rounded-2xl p-3 text-center shadow-sm">
-                <div class="text-[11px] uppercase tracking-wider text-sky-700 mb-1">Jami mayning qilingan</div>
+                <div class="text-[11px] uppercase tracking-wider text-sky-700 mb-1">Total Mined Globally</div>
                 <div id="globalMined" class="text-base font-black text-sky-900">🪙 0 AK45</div>
             </div>
         </div>
 
         <!-- TAB 2: MARKET -->
         <div id="tab-market" class="w-full hidden flex-col space-y-4">
-            <h2 class="text-lg font-bold text-slate-800">Market va Boost</h2>
+            <h2 class="text-lg font-bold text-slate-800">Market & Boosts</h2>
             <div class="bg-white/90 border border-sky-200 rounded-2xl p-4 shadow-sm">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="font-bold text-slate-800 text-sm">Turbo Tezlik (+50%)</span>
+                    <span class="font-bold text-slate-800 text-sm">Turbo Speed (+50%)</span>
                     <span class="text-xs bg-sky-100 text-sky-700 px-2 py-1 rounded-lg font-semibold">0.05 BNB</span>
                 </div>
-                <p class="text-xs text-slate-600 mb-3">Mayning tezligini 24 soat davomida oshiradi.</p>
-                <button onclick="alert('Tez orada ulanadi!')" class="w-full bg-sky-600 text-white font-bold py-2 rounded-xl text-xs">Sotib olish</button>
+                <p class="text-xs text-slate-600 mb-3">Boosts your cloud mining speed for 24 hours continuously.</p>
+                <button onclick="alert('Coming soon!')" class="w-full bg-sky-600 text-white font-bold py-2 rounded-xl text-xs cursor-pointer">Buy Now</button>
             </div>
         </div>
 
         <!-- TAB 3: TEAM -->
         <div id="tab-team" class="w-full hidden flex-col space-y-4">
-            <h2 class="text-lg font-bold text-slate-800">Referal tizimi</h2>
+            <h2 class="text-lg font-bold text-slate-800">Referral Program</h2>
             <div class="bg-white/90 border border-sky-200 rounded-2xl p-4 shadow-sm text-center">
-                <p class="text-xs text-slate-600 mb-3">Do'stlaringizni taklif qiling va har biridan +10% bonus oling!</p>
+                <p class="text-xs text-slate-600 mb-3">Invite your friends and get +10% from their mined tokens!</p>
                 <div class="bg-sky-50 border border-sky-200 rounded-xl p-2.5 flex items-center justify-between">
                     <span class="text-xs text-sky-900 truncate font-mono">t.me/AK45Mining_bot?start=ref...</span>
-                    <button onclick="alert('Nusxalandi!')" class="bg-sky-600 text-white p-1.5 rounded-lg text-xs">Nusxalash</button>
+                    <button onclick="alert('Link Copied!')" class="bg-sky-600 text-white px-3 py-1.5 rounded-lg text-xs cursor-pointer font-bold">Copy</button>
                 </div>
             </div>
         </div>
 
         <!-- TAB 4: TASKS -->
         <div id="tab-tasks" class="w-full hidden flex-col space-y-3">
-            <h2 class="text-lg font-bold text-slate-800">Kundalik vazifalar</h2>
+            <h2 class="text-lg font-bold text-slate-800">Daily Tasks</h2>
             <div class="bg-white/90 border border-sky-200 rounded-2xl p-3.5 flex justify-between items-center shadow-sm">
                 <div>
-                    <div class="font-bold text-slate-800 text-sm">Kanalga obuna bo'lish</div>
+                    <div class="font-bold text-slate-800 text-sm">Join Telegram Channel</div>
                     <div class="text-xs text-sky-700">+10 AK45</div>
                 </div>
-                <button onclick="alert('Bajarildi!')" class="bg-sky-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold">Bajarish</button>
+                <button onclick="alert('Task Completed!')" class="bg-sky-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Claim</button>
             </div>
         </div>
 
         <!-- TAB 5: PROFILE -->
         <div id="tab-profile" class="w-full hidden flex-col space-y-4">
-            <h2 class="text-lg font-bold text-slate-800">Shaxsiy profil va Hamyon</h2>
+            <h2 class="text-lg font-bold text-slate-800">User Profile</h2>
+            
+            <div class="bg-white/90 border border-sky-200 rounded-2xl p-4 shadow-sm flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center text-white font-black text-lg">
+                    U
+                </div>
+                <div>
+                    <div class="font-bold text-slate-900 text-sm">Crypto Miner</div>
+                    <div class="text-xs text-sky-700 font-mono">ID: #784920</div>
+                    <div class="text-[10px] text-emerald-600 font-semibold mt-0.5">● Status: Verified Holder</div>
+                </div>
+            </div>
+
+            <div class="bg-white/90 border border-sky-200 rounded-2xl p-4 shadow-sm space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-sky-800">Account Statistics</h3>
+                <div class="flex justify-between text-xs text-slate-700 border-b border-sky-100 pb-2">
+                    <span>Total Mined:</span>
+                    <span id="profileBalance" class="font-bold text-sky-900">0.00 AK45</span>
+                </div>
+                <div class="flex justify-between text-xs text-slate-700 border-b border-sky-100 pb-2">
+                    <span>Referrals:</span>
+                    <span class="font-bold text-sky-900">0 Users</span>
+                </div>
+                <div class="flex justify-between text-xs text-slate-700">
+                    <span>Account Tier:</span>
+                    <span class="font-bold text-amber-600">Standard</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: WALLET -->
+        <div id="tab-wallet" class="w-full hidden flex-col space-y-4">
+            <h2 class="text-lg font-bold text-slate-800">BNB Wallet & History</h2>
+            
             <div class="bg-white/90 border border-sky-200 rounded-2xl p-4 shadow-sm">
-                <h3 class="text-sm font-bold text-slate-800 mb-2">BNB Hamyonni ulash</h3>
+                <h3 class="text-sm font-bold text-slate-800 mb-2">Connect BEP-20 Wallet</h3>
                 <div id="walletSection">
-                    <input type="text" id="walletInput" placeholder="BEP-20 hamyon manzili (0x...)" class="w-full bg-sky-50 border border-sky-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none mb-2">
-                    <button onclick="connectWallet()" class="w-full bg-sky-600 text-white font-bold py-2 rounded-xl text-xs">Ulash</button>
+                    <input type="text" id="walletInput" placeholder="Paste wallet address (0x...)" class="w-full bg-sky-50 border border-sky-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none mb-2">
+                    <button onclick="connectWallet()" class="w-full bg-sky-600 text-white font-bold py-2 rounded-xl text-xs cursor-pointer">Connect Wallet</button>
                 </div>
                 <div id="walletConnectedBox" class="hidden space-y-2">
                     <div id="connectedAddress" class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-xs text-emerald-800 font-mono truncate"></div>
-                    <button onclick="disconnectWallet()" class="text-xs text-rose-600 font-semibold underline">Hamyonni uzish</button>
+                    <button onclick="disconnectWallet()" class="text-xs text-rose-600 font-semibold underline cursor-pointer">Disconnect Wallet</button>
                 </div>
             </div>
-            <div class="bg-white/90 border border-sky-200 rounded-2xl p-4 shadow-sm space-y-2 text-xs text-slate-700">
-                <div class="flex justify-between"><span>Foydalanuvchi ID:</span><span class="font-bold">#784920</span></div>
-                <div class="flex justify-between"><span>Jami ishlangan:</span><span id="profileBalance" class="font-bold">0.00 AK45</span></div>
+
+            <div class="bg-white/90 border border-sky-200 rounded-2xl p-4 shadow-sm space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-sky-800">Transactions History</h3>
+                <div id="txHistoryContainer" class="space-y-2 max-h-40 overflow-y-auto">
+                    <div class="text-xs text-slate-400 text-center py-4">No transactions yet</div>
+                </div>
             </div>
         </div>
 
     </div>
 
     <!-- BOTTOM NAVIGATION -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-sky-200 py-2 px-6 flex justify-around items-center z-50 shadow-lg">
-        <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center space-y-1 text-sky-600">
-            <i data-lucide="home" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Asosiy</span>
+    <div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-sky-200 py-2 px-4 flex justify-around items-center z-50 shadow-lg">
+        <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center space-y-1 text-sky-600 cursor-pointer">
+            <i data-lucide="home" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Home</span>
         </button>
-        <button onclick="switchTab('market')" id="nav-market" class="flex flex-col items-center space-y-1 text-slate-400">
+        <button onclick="switchTab('market')" id="nav-market" class="flex flex-col items-center space-y-1 text-slate-400 cursor-pointer">
             <i data-lucide="shopping-bag" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Market</span>
         </button>
-        <button onclick="switchTab('team')" id="nav-team" class="flex flex-col items-center space-y-1 text-slate-400">
-            <i data-lucide="users" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Jamoa</span>
+        <button onclick="switchTab('team')" id="nav-team" class="flex flex-col items-center space-y-1 text-slate-400 cursor-pointer">
+            <i data-lucide="users" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Team</span>
         </button>
-        <button onclick="switchTab('tasks')" id="nav-tasks" class="flex flex-col items-center space-y-1 text-slate-400">
-            <i data-lucide="check-square" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Vazifalar</span>
+        <button onclick="switchTab('tasks')" id="nav-tasks" class="flex flex-col items-center space-y-1 text-slate-400 cursor-pointer">
+            <i data-lucide="check-square" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Tasks</span>
         </button>
-        <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center space-y-1 text-slate-400">
-            <i data-lucide="user" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Profil</span>
+        <button onclick="switchTab('wallet')" id="nav-wallet" class="flex flex-col items-center space-y-1 text-slate-400 cursor-pointer">
+            <i data-lucide="wallet" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Wallet</span>
         </button>
     </div>
 
@@ -188,25 +254,34 @@
         let timeLeft = 86400;
         let timerInterval = null;
         let walletAddress = "";
+        let transactions = [];
 
         function switchTab(tabName) {
-            ['home', 'market', 'team', 'tasks', 'profile'].forEach(t => {
-                document.getElementById('tab-' + t).classList.add('hidden');
-                document.getElementById('nav-' + t).className = "flex flex-col items-center space-y-1 text-slate-400";
+            ['home', 'market', 'team', 'tasks', 'profile', 'wallet'].forEach(t => {
+                const tabEl = document.getElementById('tab-' + t);
+                if (tabEl) tabEl.classList.add('hidden');
+                const navEl = document.getElementById('nav-' + t);
+                if (navEl) navEl.className = "flex flex-col items-center space-y-1 text-slate-400 cursor-pointer";
             });
-            document.getElementById('tab-' + tabName).classList.remove('hidden');
-            document.getElementById('tab-' + tabName).classList.add('flex');
-            document.getElementById('nav-' + tabName).className = "flex flex-col items-center space-y-1 text-sky-600";
+            const activeTab = document.getElementById('tab-' + tabName);
+            if (activeTab) {
+                activeTab.classList.remove('hidden');
+                activeTab.classList.add('flex');
+            }
+            const activeNav = document.getElementById('nav-' + tabName);
+            if (activeNav) {
+                activeNav.className = "flex flex-col items-center space-y-1 text-sky-600 cursor-pointer";
+            }
         }
 
         function startMining() {
             if (miningActive) return;
             miningActive = true;
-            document.getElementById('miningStatusText').innerText = "Faol";
+            document.getElementById('miningStatusText').innerText = "Active";
             document.getElementById('miningStatusText').className = "font-bold text-emerald-600";
-            document.getElementById('timerSubtitle').innerText = "Mayning ketmoqda";
+            document.getElementById('timerSubtitle').innerText = "Mining in progress";
             document.getElementById('zapIcon').className = "w-5 h-5 text-amber-500 animate-bounce";
-            document.getElementById('speedDisplay').innerText = (1.17 + (balance * 0.001)).toFixed(2) + " AK45/soat";
+            document.getElementById('speedDisplay').innerText = (1.17 + (balance * 0.001)).toFixed(2) + " AK45/h";
 
             if (timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
@@ -219,7 +294,7 @@
                     miningActive = false;
                     clearInterval(timerInterval);
                     timeLeft = 86400;
-                    document.getElementById('miningStatusText').innerText = "To'xtatilgan";
+                    document.getElementById('miningStatusText').innerText = "Stopped";
                     document.getElementById('miningStatusText').className = "font-bold text-amber-600";
                     document.getElementById('zapIcon').className = "w-5 h-5 text-slate-400";
                 }
@@ -244,8 +319,9 @@
                 document.getElementById('walletSection').classList.add('hidden');
                 document.getElementById('walletConnectedBox').classList.remove('hidden');
                 document.getElementById('connectedAddress').innerText = addr;
+                addTransaction("Wallet Connected", "Successfully linked BEP-20 address", "success");
             } else {
-                alert('Iltimos, yaroqli BEP-20 hamyon manzilini kiriting!');
+                alert('Please enter a valid BEP-20 wallet address!');
             }
         }
 
@@ -254,24 +330,19 @@
             document.getElementById('walletInput').value = "";
             document.getElementById('walletConnectedBox').classList.add('hidden');
             document.getElementById('walletSection').classList.remove('hidden');
+            addTransaction("Wallet Disconnected", "Unlinked wallet address", "info");
         }
 
         function claimTokens() {
             if (!walletAddress) {
-                alert('Avval hamyoningizni ulang!');
-                switchTab('profile');
+                alert('Please connect your wallet first!');
+                switchTab('wallet');
                 return;
             }
             if (balance < 10) {
-                alert('Minimal chiqarib olish miqdori: 10 AK45');
+                alert('Minimum withdrawal amount is 10 AK45');
                 return;
             }
-            document.getElementById('claimStatus').innerText = "Muvaffaqiyatli yuborildi! Tokenlar hamyoningizga o'tkazilmoqda.";
-            balance = 0;
-            updateUI();
-            setTimeout(() => { document.getElementById('claimStatus').innerText = ""; }, 5000);
-        }
-    </script>
-</body>
-                      </html>
-                      
+            let claimedAmount = balance.toFixed(2);
+            addTransaction("Claim to Wallet", `Successfully withdrawn ${claimedAmount} AK45`, "success");
+            document.getElementById('claimStatus').innerText = `Successfully transferred ${claimedAmount} AK
