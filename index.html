@@ -6,8 +6,6 @@
     <title>AK45 Cloud Mining</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @keyframes spinSlow {
             from { transform: rotate(0deg); }
@@ -18,70 +16,246 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-b from-[#6366f1] via-[#4f46e5] to-[#312e81] text-white min-h-screen flex flex-col justify-between font-sans pb-28 select-none">
+<body class="bg-gradient-to-b from-[#6366f1] via-[#4f46e5] to-[#312e81] text-white min-h-screen flex flex-col justify-between font-sans pb-28 select-none relative overflow-x-hidden">
+
+    <!-- SIDEBAR MENU (CHAPDAN OCHILADIGAN) -->
+    <div id="sidebar" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden transition-opacity duration-300">
+        <div class="absolute top-0 left-0 w-4/5 max-w-xs h-full bg-[#1e1b4b] border-r border-indigo-500/30 p-5 flex flex-col justify-between shadow-2xl overflow-y-auto">
+            <div>
+                <!-- Sidebar Header -->
+                <div class="flex justify-between items-center mb-6 border-b border-indigo-500/20 pb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-amber-400 to-orange-500 flex items-center justify-center text-xl font-bold shadow-lg">🐅</div>
+                        <div>
+                            <div class="font-bold text-sm text-white">Sherzod Ismailov</div>
+                            <div class="text-[10px] text-indigo-300 font-mono">ID: #784920</div>
+                        </div>
+                    </div>
+                    <button onclick="toggleSidebar()" class="text-white text-xl p-1 hover:text-indigo-300 cursor-pointer">✕</button>
+                </div>
+
+                <!-- Menu Links -->
+                <div class="space-y-2">
+                    <button onclick="toggleSidebar(); openModal('settingsModal')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-indigo-900/40 text-indigo-100 transition">
+                        <div class="flex items-center space-x-3 text-sm font-medium"><span class="text-base">⚙️</span><span>Settings</span></div>
+                        <span class="text-indigo-400">›</span>
+                    </button>
+                    <button onclick="alert('Support center')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-indigo-900/40 text-indigo-100 transition">
+                        <div class="flex items-center space-x-3 text-sm font-medium"><span class="text-base">🎧</span><span>Support</span></div>
+                        <span class="text-indigo-400">›</span>
+                    </button>
+                    <button onclick="alert('Whitepaper opened')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-indigo-900/40 text-indigo-100 transition">
+                        <div class="flex items-center space-x-3 text-sm font-medium"><span class="text-base">📄</span><span>Whitepaper</span></div>
+                        <span class="text-indigo-400">›</span>
+                    </button>
+                    <button onclick="alert('Privacy Policy opened')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-indigo-900/40 text-indigo-100 transition">
+                        <div class="flex items-center space-x-3 text-sm font-medium"><span class="text-base">🔒</span><span>Privacy Policy</span></div>
+                        <span class="text-indigo-400">›</span>
+                    </button>
+                    <button onclick="alert('Website opened')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-indigo-900/40 text-indigo-100 transition">
+                        <div class="flex items-center space-x-3 text-sm font-medium"><span class="text-base">🌐</span><span>tolenocoin.com</span></div>
+                        <span class="text-indigo-400">›</span>
+                    </button>
+                    <button onclick="alert('Telegram channel opened')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-indigo-900/40 text-indigo-100 transition">
+                        <div class="flex items-center space-x-3 text-sm font-medium"><span class="text-base">✈️</span><span>Telegram</span></div>
+                        <span class="text-indigo-400">›</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Close Session -->
+            <div class="pt-4 border-t border-indigo-500/20">
+                <button onclick="alert('Session closed')" class="w-full flex items-center space-x-3 p-3 rounded-xl hover:bg-rose-950/30 text-rose-400 font-semibold text-sm">
+                    <span>🚪</span><span>Close Session</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATIONS MODAL -->
+    <div id="notificationsModal" class="fixed inset-0 z-50 bg-[#312e81] hidden flex flex-col p-4">
+        <div class="flex items-center justify-between py-2 mb-6">
+            <button onclick="closeModal('notificationsModal')" class="text-white text-xl p-1">←</button>
+            <h2 class="text-base font-bold text-white">Notifications</h2>
+            <div class="w-6"></div>
+        </div>
+        <div class="flex-1 flex flex-col items-center justify-center text-center space-y-3">
+            <div class="w-16 h-16 rounded-full bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center text-2xl text-indigo-400">🔕</div>
+            <div class="text-base font-bold text-white">No notifications yet</div>
+            <div class="text-xs text-indigo-300">New notifications will appear here</div>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settingsModal" class="fixed inset-0 z-50 bg-[#312e81] hidden flex flex-col p-4 overflow-y-auto">
+        <div class="flex items-center justify-between py-2 mb-4 border-b border-indigo-500/20 pb-3">
+            <button onclick="closeModal('settingsModal')" class="text-white text-xl p-1">←</button>
+            <h2 class="text-base font-bold text-white">Settings</h2>
+            <div class="w-6"></div>
+        </div>
+        <div class="space-y-3 max-w-md mx-auto w-full pb-10">
+            <!-- Language Selector -->
+            <div onclick="openModal('languageModal')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 flex justify-between items-center cursor-pointer hover:bg-indigo-900/40">
+                <div class="flex items-center space-x-3">
+                    <span class="text-lg">🌐</span>
+                    <div>
+                        <div class="text-sm font-bold">Select Language</div>
+                        <div id="currentLangLabel" class="text-xs text-indigo-300">English</div>
+                    </div>
+                </div>
+                <span class="text-indigo-400">›</span>
+            </div>
+
+            <!-- Push Notifications Toggle -->
+            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <span class="text-lg">🔔</span>
+                    <div>
+                        <div class="text-sm font-bold">Notifications</div>
+                        <div class="text-xs text-indigo-300">Receive push notifications</div>
+                    </div>
+                </div>
+                <input type="checkbox" checked class="w-5 h-5 accent-cyan-400 cursor-pointer">
+            </div>
+
+            <!-- Sound Effects Toggle -->
+            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <span class="text-lg">🔊</span>
+                    <div>
+                        <div class="text-sm font-bold">Sound Effects</div>
+                        <div class="text-xs text-indigo-300">Toggle app sounds on/off</div>
+                    </div>
+                </div>
+                <input type="checkbox" class="w-5 h-5 accent-cyan-400 cursor-pointer">
+            </div>
+
+            <!-- API Keys -->
+            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 flex justify-between items-center cursor-pointer hover:bg-indigo-900/40" onclick="alert('API Keys management')">
+                <div class="flex items-center space-x-3">
+                    <span class="text-lg">☀️</span>
+                    <div>
+                        <div class="text-sm font-bold">API Keys</div>
+                        <div class="text-xs text-indigo-300">Manage keys for AI integrations</div>
+                    </div>
+                </div>
+                <span class="text-indigo-400">›</span>
+            </div>
+
+            <!-- Privacy Policy -->
+            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 flex justify-between items-center cursor-pointer hover:bg-indigo-900/40" onclick="alert('Privacy Policy')">
+                <div class="flex items-center space-x-3">
+                    <span class="text-lg">📄</span>
+                    <div class="text-sm font-bold">Privacy Policy</div>
+                </div>
+                <span class="text-indigo-400">›</span>
+            </div>
+
+            <!-- Support -->
+            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 flex justify-between items-center cursor-pointer hover:bg-indigo-900/40" onclick="alert('Support')">
+                <div class="flex items-center space-x-3">
+                    <span class="text-lg">🎧</span>
+                    <div class="text-sm font-bold">Support</div>
+                </div>
+                <span class="text-indigo-400">›</span>
+            </div>
+
+            <!-- Logout -->
+            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 flex justify-between items-center cursor-pointer hover:bg-indigo-900/40" onclick="alert('Logged out')">
+                <div class="flex items-center space-x-3">
+                    <span class="text-lg text-amber-400">🚪</span>
+                    <div class="text-sm font-bold text-amber-400">Logout</div>
+                </div>
+                <span class="text-indigo-400">›</span>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="pt-2">
+                <div class="text-xs font-bold text-rose-400 uppercase tracking-wider mb-2">Danger Zone</div>
+                <div class="bg-rose-950/30 border border-rose-500/30 rounded-2xl p-4 flex justify-between items-center cursor-pointer hover:bg-rose-900/30" onclick="confirm('Are you sure you want to delete your account?') && alert('Account deleted')">
+                    <div class="text-sm font-bold text-rose-400">Delete Account</div>
+                    <span class="text-rose-400">›</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LANGUAGE SELECTION MODAL -->
+    <div id="languageModal" class="fixed inset-0 z-50 bg-[#312e81] hidden flex flex-col p-4 overflow-y-auto">
+        <div class="flex items-center justify-between py-2 mb-4 border-b border-indigo-500/20 pb-3">
+            <button onclick="closeModal('languageModal')" class="text-white text-xl p-1">←</button>
+            <h2 class="text-base font-bold text-white">Select Language</h2>
+            <div class="w-6"></div>
+        </div>
+        <div class="space-y-2 max-w-md mx-auto w-full pb-10">
+            <div onclick="setLanguage('English')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇬🇧 English</span><span class="text-cyan-400">✓</span></div>
+            <div onclick="setLanguage('Oʻzbekcha')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇺🇿 Oʻzbekcha</span></div>
+            <div onclick="setLanguage('Русский')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇷🇺 Русский</span></div>
+            <div onclick="setLanguage('Français')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇫🇷 Français</span></div>
+            <div onclick="setLanguage('Deutsch')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇩🇪 Deutsch</span></div>
+            <div onclick="setLanguage('Español')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇪🇸 Español</span></div>
+            <div onclick="setLanguage('中文')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇨🇳 中文 (Chinese)</span></div>
+            <div onclick="setLanguage('한국어')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇰🇷 한국어 (Korean)</span></div>
+            <div onclick="setLanguage('日本語')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇯🇵 日本語 (Japanese)</span></div>
+            <div onclick="setLanguage('Indonesia')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇮🇩 Indonesia</span></div>
+            <div onclick="setLanguage('العربية')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇸🇦 العربية (Arabic)</span></div>
+            <div onclick="setLanguage('Türkçe')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇹🇷 Türkçe</span></div>
+            <div onclick="setLanguage('हिन्दी')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇮🇳 हिन्दी (Hindi)</span></div>
+            <div onclick="setLanguage('Italiano')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇮🇹 Italiano</span></div>
+            <div onclick="setLanguage('Português')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇵🇹 Português</span></div>
+            <div onclick="setLanguage('Tiếng Việt')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇻🇳 Tiếng Việt</span></div>
+            <div onclick="setLanguage('Polski')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇵🇱 Polski</span></div>
+        </div>
+    </div>
 
     <!-- TOP HEADER -->
     <div class="px-4 py-3 flex justify-between items-center">
-        <button onclick="switchTab('profile')" class="text-white hover:opacity-80 cursor-pointer">
-            <i data-lucide="menu" class="w-6 h-6"></i>
-        </button>
+        <!-- 3 ta chiziqli menyu tugmasi -->
+        <button onclick="toggleSidebar()" class="text-white hover:opacity-80 cursor-pointer text-xl p-1 font-bold">☰</button>
         <div class="text-center">
             <div class="text-xs text-indigo-200 uppercase tracking-wider font-medium">Current Balance</div>
             <div id="balanceDisplay" class="text-3xl font-black tracking-tight text-white">0.00</div>
             <div class="text-xs font-bold text-amber-400">AK45</div>
         </div>
-        <button onclick="alert('No notifications')" class="text-white hover:opacity-80 cursor-pointer">
-            <i data-lucide="bell" class="w-6 h-6"></i>
-        </button>
+        <!-- Qo'ng'iroqcha tugmasi -->
+        <button onclick="openModal('notificationsModal')" class="text-white hover:opacity-80 cursor-pointer text-xl p-1">🔔</button>
     </div>
 
     <!-- MAIN CONTAINER -->
     <div class="px-4 py-2 flex-1 flex flex-col items-center max-w-md mx-auto w-full space-y-4">
         
-        <!-- TOP QUICK BUTTONS (TOP 50, Transfers, Premium, Wallet) -->
+        <!-- TOP QUICK BUTTONS -->
         <div class="w-full bg-indigo-950/40 backdrop-blur-md border border-indigo-500/30 rounded-2xl p-3 grid grid-cols-4 gap-2 shadow-lg">
             <button onclick="alert('TOP 50 coming soon!')" class="flex flex-col items-center justify-center space-y-1 text-indigo-200 hover:text-white cursor-pointer">
-                <div class="w-9 h-9 rounded-xl bg-indigo-600/40 flex items-center justify-center border border-indigo-400/30">
-                    <i data-lucide="trophy" class="w-4 h-4 text-amber-300"></i>
-                </div>
+                <div class="w-9 h-9 rounded-xl bg-indigo-600/40 flex items-center justify-center border border-indigo-400/30 text-base">🏆</div>
                 <span class="text-[10px] font-semibold">TOP 50</span>
             </button>
             <button onclick="switchTab('wallet')" class="flex flex-col items-center justify-center space-y-1 text-indigo-200 hover:text-white cursor-pointer">
-                <div class="w-9 h-9 rounded-xl bg-indigo-600/40 flex items-center justify-center border border-indigo-400/30">
-                    <i data-lucide="arrow-left-right" class="w-4 h-4 text-sky-300"></i>
-                </div>
+                <div class="w-9 h-9 rounded-xl bg-indigo-600/40 flex items-center justify-center border border-indigo-400/30 text-base">🔄</div>
                 <span class="text-[10px] font-semibold">Transfers</span>
             </button>
             <button onclick="alert('Premium feature!')" class="flex flex-col items-center justify-center space-y-1 text-indigo-200 hover:text-white cursor-pointer">
-                <div class="w-9 h-9 rounded-xl bg-indigo-600/40 flex items-center justify-center border border-indigo-400/30">
-                    <i data-lucide="crown" class="w-4 h-4 text-amber-400"></i>
-                </div>
+                <div class="w-9 h-9 rounded-xl bg-indigo-600/40 flex items-center justify-center border border-indigo-400/30 text-base">👑</div>
                 <span class="text-[10px] font-semibold">Premium</span>
             </button>
-            <button onclick="switchTab('wallet')" class="flex flex-col items-center justify-center space-y-1 text-indigo-200 hover:text-white cursor-pointer">
-                <div class="w-9 h-9 rounded-xl bg-indigo-600/40 flex items-center justify-center border border-indigo-400/30">
-                    <i data-lucide="wallet" class="w-4 h-4 text-emerald-300"></i>
-                </div>
+            <button onclick="switchTab('profile')" class="flex flex-col items-center justify-center space-y-1 text-indigo-200 hover:text-white cursor-pointer">
+                <div class="w-9 h-9 rounded-xl bg-indigo-600/40 flex items-center justify-center border border-indigo-400/30 text-base">👛</div>
                 <span class="text-[10px] font-semibold">Wallet</span>
             </button>
         </div>
 
         <!-- TAB 1: HOME -->
         <div id="tab-home" class="w-full flex flex-col items-center space-y-4">
-            
-            <!-- Market Price Ticker -->
             <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-full px-4 py-1.5 flex items-center space-x-2 text-xs shadow-md">
                 <div class="w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center text-[10px] font-bold text-black">B</div>
                 <span class="font-bold text-indigo-100">AK45/BNB $0.124</span>
                 <span class="text-emerald-400 font-semibold flex items-center">▲ +3.49%</span>
             </div>
 
-            <!-- Mining Status -->
             <div class="text-xs font-medium text-indigo-200">
                 Mining Status: <span id="miningStatusText" class="font-bold text-emerald-400">Stopped</span>
             </div>
 
-            <!-- Circular Timer Widget -->
             <div class="relative w-56 h-56 flex items-center justify-center cursor-pointer" onclick="startMining()">
                 <div class="absolute inset-0 rounded-full border-4 border-indigo-500/20"></div>
                 <div class="absolute inset-1 rounded-full border-2 border-cyan-400 border-dashed animate-spin-slow"></div>
@@ -92,249 +266,5 @@
                 </div>
             </div>
 
-            <!-- Earnings & Limit Grid -->
             <div class="w-full grid grid-cols-2 gap-3 text-center">
-                <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-2xl p-3 backdrop-blur-md">
-                    <div class="text-xs text-indigo-300 mb-1">Hourly Earnings</div>
-                    <div id="speedDisplay" class="text-sm font-black text-white">1.17 AK45</div>
-                </div>
-                <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-2xl p-3 backdrop-blur-md">
-                    <div class="text-xs text-indigo-300 mb-1">24 Hours</div>
-                    <div class="text-sm font-black text-white">28 AK45</div>
-                </div>
-            </div>
-
-            <!-- Recent Activity Notification Pill -->
-            <div class="w-full bg-indigo-950/50 border border-indigo-500/30 rounded-2xl p-2.5 flex items-center justify-between text-xs backdrop-blur-md">
-                <div class="flex items-center space-x-2">
-                    <div class="w-7 h-7 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold">⚡</div>
-                    <span class="text-indigo-200">Alex M. <span class="text-white font-semibold">42 AK45 earned</span></span>
-                </div>
-                <span class="text-indigo-400 text-[10px]">Just now</span>
-            </div>
-
-            <!-- Bottom Stats Cards -->
-            <div class="w-full grid grid-cols-2 gap-3">
-                <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-2xl p-3 backdrop-blur-md flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-600/30 flex items-center justify-center">🐅</div>
-                    <div>
-                        <div class="text-xs font-bold">203 days</div>
-                        <div class="text-[10px] text-indigo-300">132 times</div>
-                    </div>
-                </div>
-                <div onclick="switchTab('team')" class="bg-indigo-950/40 border border-indigo-500/30 rounded-2xl p-3 backdrop-blur-md flex justify-between items-center cursor-pointer">
-                    <div>
-                        <div class="text-xs font-bold mb-1">Team</div>
-                        <div class="flex -space-x-1.5">
-                            <div class="w-6 h-6 rounded-full bg-amber-500 text-[10px] flex items-center justify-center font-bold">A</div>
-                            <div class="w-6 h-6 rounded-full bg-cyan-500 text-[10px] flex items-center justify-center font-bold">B</div>
-                            <div class="w-6 h-6 rounded-full bg-emerald-500 text-[10px] flex items-center justify-center font-bold">C</div>
-                        </div>
-                    </div>
-                    <i data-lucide="chevron-right" class="w-4 h-4 text-indigo-400"></i>
-                </div>
-            </div>
-
-            <!-- World Wide Stats -->
-            <div class="w-full text-center py-2">
-                <div class="text-[10px] uppercase tracking-widest text-indigo-300 mb-1">World Wide</div>
-                <div class="text-base font-black tracking-wider text-white">111,938,996.98</div>
-            </div>
-        </div>
-
-        <!-- TAB 2: MARKET -->
-        <div id="tab-market" class="w-full hidden flex-col space-y-4">
-            <h2 class="text-lg font-bold text-white">Market & Boosts</h2>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 backdrop-blur-md">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="font-bold text-sm">Turbo Speed (+50%)</span>
-                    <span class="text-xs bg-indigo-600/40 text-indigo-200 px-2 py-1 rounded-lg font-semibold">0.05 BNB</span>
-                </div>
-                <p class="text-xs text-indigo-300 mb-3">Boosts your mining speed for 24 hours.</p>
-                <button onclick="alert('Coming soon!')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl text-xs cursor-pointer">Buy Now</button>
-            </div>
-        </div>
-
-        <!-- TAB 3: TEAM -->
-        <div id="tab-team" class="w-full hidden flex-col space-y-4">
-            <h2 class="text-lg font-bold text-white">Referral Program</h2>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 backdrop-blur-md text-center">
-                <p class="text-xs text-indigo-300 mb-3">Invite friends and get +10% bonuses!</p>
-                <div class="bg-indigo-900/50 border border-indigo-500/40 rounded-xl p-2.5 flex items-center justify-between">
-                    <span class="text-xs text-indigo-200 truncate font-mono">t.me/AK45Mining_bot?start=ref</span>
-                    <button onclick="alert('Link Copied!')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Copy</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 4: TASKS -->
-        <div id="tab-tasks" class="w-full hidden flex-col space-y-3">
-            <h2 class="text-lg font-bold text-white">Daily Tasks</h2>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-3.5 flex justify-between items-center backdrop-blur-md">
-                <div>
-                    <div class="font-bold text-sm">Join Telegram Channel</div>
-                    <div class="text-xs text-indigo-300">+10 AK45</div>
-                </div>
-                <button onclick="alert('Completed!')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Claim</button>
-            </div>
-        </div>
-
-        <!-- TAB 5: PROFILE / WALLET -->
-        <div id="tab-wallet" class="w-full hidden flex-col space-y-4">
-            <h2 class="text-lg font-bold text-white">BNB Wallet & History</h2>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 backdrop-blur-md">
-                <h3 class="text-sm font-bold mb-2">Connect BEP-20 Wallet</h3>
-                <div id="walletSection">
-                    <input type="text" id="walletInput" placeholder="Paste wallet address (0x...)" class="w-full bg-indigo-900/50 border border-indigo-500/40 rounded-xl px-3 py-2 text-xs text-white outline-none mb-2 placeholder-indigo-400">
-                    <button onclick="connectWallet()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl text-xs cursor-pointer">Connect Wallet</button>
-                </div>
-                <div id="walletConnectedBox" class="hidden space-y-2">
-                    <div id="connectedAddress" class="bg-emerald-950/50 border border-emerald-500/40 rounded-xl p-2.5 text-xs text-emerald-300 font-mono truncate"></div>
-                    <button onclick="disconnectWallet()" class="text-xs text-rose-400 font-semibold underline cursor-pointer">Disconnect Wallet</button>
-                </div>
-            </div>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 backdrop-blur-md space-y-3">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-300">Transactions History</h3>
-                <div id="txHistoryContainer" class="space-y-2 max-h-40 overflow-y-auto">
-                    <div class="text-xs text-indigo-400 text-center py-4">No transactions yet</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-profile" class="w-full hidden flex-col space-y-4">
-            <h2 class="text-lg font-bold text-white">User Profile</h2>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 backdrop-blur-md flex items-center space-x-3">
-                <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-lg">U</div>
-                <div>
-                    <div class="font-bold text-sm">Crypto Miner</div>
-                    <div class="text-xs text-indigo-300 font-mono">ID: #784920</div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- FLOATING CHAT BUTTON -->
-    <div class="fixed bottom-20 right-4 z-40">
-        <button onclick="alert('Support chat')" class="w-12 h-12 rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-900 flex items-center justify-center shadow-lg cursor-pointer">
-            <i data-lucide="message-circle" class="w-6 h-6"></i>
-        </button>
-    </div>
-
-    <!-- BOTTOM NAVIGATION -->
-    <div class="fixed bottom-0 left-0 right-0 bg-[#1e1b4b]/90 backdrop-blur-md border-t border-indigo-500/30 py-2 px-6 flex justify-around items-center z-50 shadow-2xl">
-        <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center space-y-1 text-cyan-400 cursor-pointer">
-            <i data-lucide="home" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Home</span>
-        </button>
-        <button onclick="switchTab('market')" id="nav-market" class="flex flex-col items-center space-y-1 text-indigo-300 cursor-pointer">
-            <i data-lucide="shopping-bag" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Market</span>
-        </button>
-        <button onclick="switchTab('team')" id="nav-team" class="flex flex-col items-center space-y-1 text-indigo-300 cursor-pointer">
-            <i data-lucide="users" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Team</span>
-        </button>
-        <button onclick="switchTab('tasks')" id="nav-tasks" class="flex flex-col items-center space-y-1 text-indigo-300 cursor-pointer">
-            <i data-lucide="check-square" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Tasks</span>
-        </button>
-        <button onclick="switchTab('wallet')" id="nav-wallet" class="flex flex-col items-center space-y-1 text-indigo-300 cursor-pointer">
-            <i data-lucide="user" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Profile</span>
-        </button>
-    </div>
-
-    <!-- SCRIPTS -->
-    <script>
-        let balance = 0.00;
-        let miningActive = false;
-        let timeLeft = 86400;
-        let timerInterval = null;
-        let walletAddress = "";
-        let transactions = [];
-
-        function switchTab(tabName) {
-            ['home', 'market', 'team', 'tasks', 'wallet', 'profile'].forEach(t => {
-                const tabEl = document.getElementById('tab-' + t);
-                if (tabEl) {
-                    tabEl.classList.add('hidden');
-                    tabEl.classList.remove('flex');
-                }
-                const navEl = document.getElementById('nav-' + t);
-                if (navEl) {
-                    navEl.className = "flex flex-col items-center space-y-1 text-indigo-300 cursor-pointer";
-                }
-            });
-            const activeTab = document.getElementById('tab-' + tabName);
-            if (activeTab) {
-                activeTab.classList.remove('hidden');
-                activeTab.classList.add('flex');
-            }
-            const activeNav = document.getElementById('nav-' + (tabName === 'profile' ? 'wallet' : tabName));
-            if (activeNav) {
-                activeNav.className = "flex flex-col items-center space-y-1 text-cyan-400 cursor-pointer";
-            }
-        }
-
-        function startMining() {
-            if (miningActive) return;
-            miningActive = true;
-            document.getElementById('miningStatusText').innerText = "Active";
-            document.getElementById('miningStatusText').className = "font-bold text-cyan-400";
-            document.getElementById('timerSubtitle').innerText = "Mining in progress";
-
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (timeLeft > 0) {
-                    timeLeft--;
-                    balance += 0.000325;
-                    updateUI();
-                } else {
-                    miningActive = false;
-                    clearInterval(timerInterval);
-                    timeLeft = 86400;
-                    document.getElementById('miningStatusText').innerText = "Stopped";
-                    document.getElementById('miningStatusText').className = "font-bold text-emerald-400";
-                }
-            }, 1000);
-        }
-
-        function updateUI() {
-            document.getElementById('balanceDisplay').innerText = balance.toFixed(2);
-            let hrs = Math.floor(timeLeft / 3600).toString().padStart(2, '0');
-            let mins = Math.floor((timeLeft % 3600) / 60).toString().padStart(2, '0');
-            let secs = (timeLeft % 60).toString().padStart(2, '0');
-            document.getElementById('timerDisplay').innerText = `${hrs}:${mins}:${secs}`;
-        }
-
-        function connectWallet() {
-            let addr = document.getElementById('walletInput').value.trim();
-            if (addr.length > 10) {
-                walletAddress = addr;
-                document.getElementById('walletSection').classList.add('hidden');
-                document.getElementById('walletConnectedBox').classList.remove('hidden');
-                document.getElementById('connectedAddress').innerText = addr;
-                addTransaction("Wallet Connected", "Successfully linked BEP-20", "success");
-            } else {
-                alert('Please enter a valid BEP-20 wallet address!');
-            }
-        }
-
-        function disconnectWallet() {
-            walletAddress = "";
-            document.getElementById('walletInput').value = "";
-            document.getElementById('walletConnectedBox').classList.add('hidden');
-            document.getElementById('walletSection').classList.remove('hidden');
-            addTransaction("Wallet Disconnected", "Unlinked wallet address", "info");
-        }
-
-        function addTransaction(title, desc, type) {
-            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            transactions.unshift({ title, desc, time: timeStr, type });
-            renderTransactions();
-        }
-
-        function renderTransactions() {
-            const container = document.getElementById('txHistoryContainer');
-            if (!container) return;
-            if (transactions.length === 0) {
-                container.innerHTML = `<div class="text-xs text-indigo-400 text-center py-4">No transactions yet</div>`;
-                return;
-            }
-          
+                <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-2xl p-3
