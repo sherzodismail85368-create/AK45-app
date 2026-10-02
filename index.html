@@ -1,245 +1,277 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AK45 Cloud Mining</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    body {
-      background-color: #0f172a;
-      color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 100vh;
-      padding: 20px 16px;
-    }
-
-    .header {
-      width: 100%;
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .header h1 {
-      font-size: 24px;
-      font-weight: 800;
-      color: #facc15;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .header p {
-      font-size: 13px;
-      color: #94a3b8;
-      margin-top: 4px;
-    }
-
-    .balance-container {
-      background: rgba(30, 41, 59, 0.7);
-      border: 1px solid rgba(250, 204, 21, 0.2);
-      border-radius: 20px;
-      padding: 20px 30px;
-      text-align: center;
-      width: 100%;
-      max-width: 320px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-    }
-
-    .balance-title {
-      font-size: 14px;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .balance-value {
-      font-size: 36px;
-      font-weight: 900;
-      color: #ffffff;
-      margin-top: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .balance-value span {
-      color: #facc15;
-    }
-
-    .mining-area {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 20px 0;
-    }
-
-    .mining-btn {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #3b82f6 0%, #1d4ed8 100%);
-      border: 6px solid #facc15;
-      box-shadow: 0 0 30px rgba(250, 204, 21, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.3);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.1s ease, box-shadow 0.2s ease;
-      outline: none;
-    }
-
-    .mining-btn:active {
-      transform: scale(0.95);
-      box-shadow: 0 0 15px rgba(250, 204, 21, 0.6);
-    }
-
-    .mining-btn img {
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      object-fit: cover;
-      pointer-events: none;
-    }
-
-    .floating-text {
-      position: absolute;
-      font-size: 24px;
-      font-weight: 900;
-      color: #facc15;
-      pointer-events: none;
-      animation: floatUp 0.8s ease-out forwards;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-    }
-
-    @keyframes floatUp {
-      0% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(-80px) scale(1.3);
-      }
-    }
-
-    .stats {
-      width: 100%;
-      max-width: 320px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .stat-card {
-      background: rgba(30, 41, 59, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 12px;
-      border-radius: 12px;
-      text-align: center;
-    }
-
-    .stat-card .label {
-      font-size: 11px;
-      color: #64748b;
-      text-transform: uppercase;
-    }
-
-    .stat-card .val {
-      font-size: 16px;
-      font-weight: 700;
-      color: #e2e8f0;
-      margin-top: 4px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AK45 Cloud Mining</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spinSlow 15s linear infinite;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-gradient-to-b from-[#e0f2fe] via-[#bae6fd] to-[#7dd3fc] text-slate-900 min-h-screen flex flex-col justify-between font-sans pb-24 select-none">
 
-  <div class="header">
-    <h1>AK45 Mining</h1>
-    <p>Fan-Token Mining Application</p>
-  </div>
-
-  <div class="balance-container">
-    <div class="balance-title">Баланс $AK45</div>
-    <div class="balance-value">
-      <span id="balance">0.00</span>
+    <!-- TOP HEADER -->
+    <div class="px-4 py-3 flex justify-between items-center bg-white/60 backdrop-blur-md border-b border-sky-200/50 shadow-sm">
+        <div class="flex items-center space-x-2">
+            <span class="font-black text-xl tracking-wider bg-gradient-to-r from-sky-600 to-blue-700 bg-clip-text text-transparent">AK45</span>
+        </div>
+        <div>
+            <button onclick="switchTab('profile')" class="flex items-center space-x-1 bg-white/80 border border-sky-300 px-3 py-1 rounded-full text-xs font-semibold shadow-sm">
+                <i data-lucide="user" class="w-3.5 h-3.5 text-sky-600"></i>
+                <span>Profil</span>
+            </button>
+        </div>
     </div>
-  </div>
 
-  <div class="mining-area">
-    <button class="mining-btn" id="mineBtn">
-      <img src="logo.png" alt="AK45 Logo" id="logoImg">
-    </button>
-  </div>
+    <!-- MAIN CONTAINER -->
+    <div class="px-4 py-4 flex-1 flex flex-col items-center max-w-md mx-auto w-full">
+        
+        <!-- BNB Ticker -->
+        <div class="w-full bg-white/70 border border-sky-200 rounded-2xl p-2.5 mb-5 flex justify-between items-center text-xs shadow-sm">
+            <div class="flex items-center space-x-2">
+                <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-500 flex items-center justify-center font-black text-white shadow-sm">B</div>
+                <span class="font-bold text-slate-700">BNB / USD</span>
+            </div>
+            <span class="text-emerald-600 font-semibold flex items-center">
+                $615.40 <i data-lucide="trending-up" class="w-3 h-3 ml-1"></i> +3.12%
+            </span>
+        </div>
 
-  <div class="stats">
-    <div class="stat-card">
-      <div class="label">Скорость</div>
-      <div class="val">+0.1 / клик</div>
+        <!-- TAB 1: HOME -->
+        <div id="tab-home" class="w-full flex flex-col items-center">
+            
+            <!-- Balance & Claim -->
+            <div class="w-full bg-white/80 border border-sky-200 rounded-2xl p-4 mb-5 text-center shadow-sm">
+                <div class="text-xs text-sky-700 font-medium mb-1">Joriy balans</div>
+                <div id="balanceDisplay" class="text-3xl font-black text-sky-900 mb-3">0.00 AK45</div>
+                <button onclick="claimTokens()" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-md transition-transform active:scale-95 flex items-center justify-center space-x-1">
+                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                    <span>Hamyonga o'tkazish (Claim)</span>
+                </button>
+                <p id="claimStatus" class="text-xs text-emerald-600 mt-2 font-semibold"></p>
+            </div>
+
+            <!-- Mining Status -->
+            <div class="text-center mb-3 text-xs">
+                <span>Mayning holati: </span>
+                <span id="miningStatusText" class="font-bold text-amber-600">To'xtatilgan</span>
+            </div>
+
+            <!-- Timer Circle -->
+            <div class="relative w-60 h-60 flex items-center justify-center mb-5">
+                <div class="absolute inset-0 rounded-full border-4 border-sky-300/40 animate-pulse"></div>
+                <div class="absolute inset-2 rounded-full border-2 border-blue-400/30 border-dashed animate-spin-slow"></div>
+                
+                <div onclick="startMining()" id="miningButton" class="w-52 h-52 rounded-full bg-gradient-to-b from-white to-sky-100 border-4 border-sky-300 flex flex-col items-center justify-center shadow-lg cursor-pointer transition-transform active:scale-95">
+                    <div class="w-10 h-10 rounded-full bg-sky-200/60 flex items-center justify-center mb-1">
+                        <i id="zapIcon" data-lucide="zap" class="w-5 h-5 text-slate-400"></i>
+                    </div>
+                    <div id="timerDisplay" class="text-2xl font-black tracking-wider text-slate-800 mb-1">24:00:00</div>
+                    <div id="timerSubtitle" class="text-[11px] text-sky-700 font-medium px-2 text-center">Boshlash uchun bosing</div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="w-full grid grid-cols-2 gap-3 mb-5">
+                <div class="bg-white/80 border border-sky-200 rounded-2xl p-3 text-center shadow-sm">
+                    <div class="text-xs text-sky-700 mb-1">Tezlik</div>
+                    <div id="speedDisplay" class="text-sm font-bold text-slate-800">0.00 AK45/soat</div>
+                </div>
+                <div class="bg-white/80 border border-sky-200 rounded-2xl p-3 text-center shadow-sm">
+                    <div class="text-xs text-sky-700 mb-1">24 soatlik limit</div>
+                    <div class="text-sm font-bold text-slate-800">28 AK45</div>
+                </div>
+            </div>
+
+            <!-- Global Pool -->
+            <div class="w-full bg-white/60 border border-sky-200 rounded-2xl p-3 text-center shadow-sm">
+                <div class="text-[11px] uppercase tracking-wider text-sky-700 mb-1">Jami mayning qilingan</div>
+                <div id="globalMined" class="text-base font-black text-sky-900">🪙 0 AK45</div>
+            </div>
+        </div>
+
+        <!-- TAB 2: MARKET -->
+        <div id="tab-market" class="w-full hidden flex-col space-y-4">
+            <h2 class="text-lg font-bold text-slate-800">Market va Boost</h2>
+            <div class="bg-white/90 border border-sky-200 rounded-2xl p-4 shadow-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-bold text-slate-800 text-sm">Turbo Tezlik (+50%)</span>
+                    <span class="text-xs bg-sky-100 text-sky-700 px-2 py-1 rounded-lg font-semibold">0.05 BNB</span>
+                </div>
+                <p class="text-xs text-slate-600 mb-3">Mayning tezligini 24 soat davomida oshiradi.</p>
+                <button onclick="alert('Tez orada ulanadi!')" class="w-full bg-sky-600 text-white font-bold py-2 rounded-xl text-xs">Sotib olish</button>
+            </div>
+        </div>
+
+        <!-- TAB 3: TEAM -->
+        <div id="tab-team" class="w-full hidden flex-col space-y-4">
+            <h2 class="text-lg font-bold text-slate-800">Referal tizimi</h2>
+            <div class="bg-white/90 border border-sky-200 rounded-2xl p-4 shadow-sm text-center">
+                <p class="text-xs text-slate-600 mb-3">Do'stlaringizni taklif qiling va har biridan +10% bonus oling!</p>
+                <div class="bg-sky-50 border border-sky-200 rounded-xl p-2.5 flex items-center justify-between">
+                    <span class="text-xs text-sky-900 truncate font-mono">t.me/AK45Mining_bot?start=ref...</span>
+                    <button onclick="alert('Nusxalandi!')" class="bg-sky-600 text-white p-1.5 rounded-lg text-xs">Nusxalash</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: TASKS -->
+        <div id="tab-tasks" class="w-full hidden flex-col space-y-3">
+            <h2 class="text-lg font-bold text-slate-800">Kundalik vazifalar</h2>
+            <div class="bg-white/90 border border-sky-200 rounded-2xl p-3.5 flex justify-between items-center shadow-sm">
+                <div>
+                    <div class="font-bold text-slate-800 text-sm">Kanalga obuna bo'lish</div>
+                    <div class="text-xs text-sky-700">+10 AK45</div>
+                </div>
+                <button onclick="alert('Bajarildi!')" class="bg-sky-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold">Bajarish</button>
+            </div>
+        </div>
+
+        <!-- TAB 5: PROFILE -->
+        <div id="tab-profile" class="w-full hidden flex-col space-y-4">
+            <h2 class="text-lg font-bold text-slate-800">Shaxsiy profil va Hamyon</h2>
+            <div class="bg-white/90 border border-sky-200 rounded-2xl p-4 shadow-sm">
+                <h3 class="text-sm font-bold text-slate-800 mb-2">BNB Hamyonni ulash</h3>
+                <div id="walletSection">
+                    <input type="text" id="walletInput" placeholder="BEP-20 hamyon manzili (0x...)" class="w-full bg-sky-50 border border-sky-200 rounded-xl px-3 py-2 text-xs text-slate-800 outline-none mb-2">
+                    <button onclick="connectWallet()" class="w-full bg-sky-600 text-white font-bold py-2 rounded-xl text-xs">Ulash</button>
+                </div>
+                <div id="walletConnectedBox" class="hidden space-y-2">
+                    <div id="connectedAddress" class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-xs text-emerald-800 font-mono truncate"></div>
+                    <button onclick="disconnectWallet()" class="text-xs text-rose-600 font-semibold underline">Hamyonni uzish</button>
+                </div>
+            </div>
+            <div class="bg-white/90 border border-sky-200 rounded-2xl p-4 shadow-sm space-y-2 text-xs text-slate-700">
+                <div class="flex justify-between"><span>Foydalanuvchi ID:</span><span class="font-bold">#784920</span></div>
+                <div class="flex justify-between"><span>Jami ishlangan:</span><span id="profileBalance" class="font-bold">0.00 AK45</span></div>
+            </div>
+        </div>
+
     </div>
-    <div class="stat-card">
-      <div class="label">Supply</div>
-      <div class="val">45M $AK45</div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-sky-200 py-2 px-6 flex justify-around items-center z-50 shadow-lg">
+        <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center space-y-1 text-sky-600">
+            <i data-lucide="home" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Asosiy</span>
+        </button>
+        <button onclick="switchTab('market')" id="nav-market" class="flex flex-col items-center space-y-1 text-slate-400">
+            <i data-lucide="shopping-bag" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Market</span>
+        </button>
+        <button onclick="switchTab('team')" id="nav-team" class="flex flex-col items-center space-y-1 text-slate-400">
+            <i data-lucide="users" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Jamoa</span>
+        </button>
+        <button onclick="switchTab('tasks')" id="nav-tasks" class="flex flex-col items-center space-y-1 text-slate-400">
+            <i data-lucide="check-square" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Vazifalar</span>
+        </button>
+        <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center space-y-1 text-slate-400">
+            <i data-lucide="user" class="w-5 h-5"></i><span class="text-[10px] font-semibold">Profil</span>
+        </button>
     </div>
-  </div>
 
-  <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
+    <!-- SCRIPTS -->
+    <script>
+        lucide.createIcons();
 
-    let balance = parseFloat(localStorage.getItem('ak45_balance')) || 0.00;
-    const balanceEl = document.getElementById('balance');
-    const mineBtn = document.getElementById('mineBtn');
+        let balance = 0.00;
+        let totalMinedGlobal = 0;
+        let miningActive = false;
+        let timeLeft = 86400;
+        let timerInterval = null;
+        let walletAddress = "";
 
-    balanceEl.textContent = balance.toFixed(2);
+        function switchTab(tabName) {
+            ['home', 'market', 'team', 'tasks', 'profile'].forEach(t => {
+                document.getElementById('tab-' + t).classList.add('hidden');
+                document.getElementById('nav-' + t).className = "flex flex-col items-center space-y-1 text-slate-400";
+            });
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            document.getElementById('tab-' + tabName).classList.add('flex');
+            document.getElementById('nav-' + tabName).className = "flex flex-col items-center space-y-1 text-sky-600";
+        }
 
-    mineBtn.addEventListener('click', (e) => {
-      balance += 0.1;
-      balanceEl.textContent = balance.toFixed(2);
-      localStorage.setItem('ak45_balance', balance.toString());
+        function startMining() {
+            if (miningActive) return;
+            miningActive = true;
+            document.getElementById('miningStatusText').innerText = "Faol";
+            document.getElementById('miningStatusText').className = "font-bold text-emerald-600";
+            document.getElementById('timerSubtitle').innerText = "Mayning ketmoqda";
+            document.getElementById('zapIcon').className = "w-5 h-5 text-amber-500 animate-bounce";
+            document.getElementById('speedDisplay').innerText = (1.17 + (balance * 0.001)).toFixed(2) + " AK45/soat";
 
-      if (tg.HapticFeedback) {
-        tg.HapticFeedback.impactOccurred('light');
-      }
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    balance += 0.000325;
+                    totalMinedGlobal += 1;
+                    updateUI();
+                } else {
+                    miningActive = false;
+                    clearInterval(timerInterval);
+                    timeLeft = 86400;
+                    document.getElementById('miningStatusText').innerText = "To'xtatilgan";
+                    document.getElementById('miningStatusText').className = "font-bold text-amber-600";
+                    document.getElementById('zapIcon').className = "w-5 h-5 text-slate-400";
+                }
+            }, 1000);
+        }
 
-      showFloatingText(e);
-    });
+        function updateUI() {
+            document.getElementById('balanceDisplay').innerText = balance.toFixed(2) + " AK45";
+            document.getElementById('profileBalance').innerText = balance.toFixed(2) + " AK45";
+            document.getElementById('globalMined').innerText = "🪙 " + totalMinedGlobal.toLocaleString() + " AK45";
+            
+            let hrs = Math.floor(timeLeft / 3600).toString().padStart(2, '0');
+            let mins = Math.floor((timeLeft % 3600) / 60).toString().padStart(2, '0');
+            let secs = (timeLeft % 60).toString().padStart(2, '0');
+            document.getElementById('timerDisplay').innerText = `${hrs}:${mins}:${secs}`;
+        }
 
-    function showFloatingText(e) {
-      const rect = mineBtn.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+        function connectWallet() {
+            let addr = document.getElementById('walletInput').value.trim();
+            if (addr.length > 10) {
+                walletAddress = addr;
+                document.getElementById('walletSection').classList.add('hidden');
+                document.getElementById('walletConnectedBox').classList.remove('hidden');
+                document.getElementById('connectedAddress').innerText = addr;
+            } else {
+                alert('Iltimos, yaroqli BEP-20 hamyon manzilini kiriting!');
+            }
+        }
 
-      const text = document.createElement('div');
-      text.className = 'floating-text';
-      text.innerText = '+0.1';
-      text.style.left = `${x}px`;
-      text.style.top = `${y}px`;
+        function disconnectWallet() {
+            walletAddress = "";
+            document.getElementById('walletInput').value = "";
+            document.getElementById('walletConnectedBox').classList.add('hidden');
+            document.getElementById('walletSection').classList.remove('hidden');
+        }
 
-      mineBtn.parentElement.appendChild(text);
-
-      setTimeout(() => {
-        text.remove();
-      }, 800);
-    }
-  </script>
+        function claimTokens() {
+            if (!walletAddress) {
+                alert('Avval hamyoningizni ulang!');
+                switchTab('profile');
+                return;
+            }
+            if (balance < 10) {
+                alert('Minimal chiqarib olish miqdori: 10 AK45');
+                return;
+            }
+            document.getElementById('claimStatus').innerText = "Muvaffaqiyatli yuborildi! Tokenlar hamyoningizga o'tkazilmoqda.";
+            balance = 0;
+            updateUI();
+            setTimeout(() => { document.getElementById('claimStatus').innerText = ""; }, 5000);
+        }
+    </script>
 </body>
-  </html>
-  
+                      </html>
+                      
