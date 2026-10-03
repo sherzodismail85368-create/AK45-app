@@ -1,460 +1,905 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AK45 Cloud Mining</title>
-    <!-- Tailwind CSS -->
+    <title>Abduqodir Khusanov Fan Token</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f0c29',
+                        darkCard: 'rgba(26, 21, 64, 0.75)',
+                        accentGold: '#facc15',
+                        accentBlue: '#38bdf8',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @keyframes spinSlow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        @keyframes floatSparkle {
+            0% { transform: translateY(0px) translateX(0px) scale(0.8); opacity: 0.2; }
+            50% { transform: translateY(-120px) translateX(40px) scale(1.2); opacity: 0.9; }
+            100% { transform: translateY(-250px) translateX(-30px) scale(0.6); opacity: 0; }
         }
-        .animate-spin-slow {
-            animation: spinSlow 20s linear infinite;
+        .sparkle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(250,204,21,1) 0%, rgba(56,189,248,0.8) 50%, transparent 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatSparkle 4s infinite ease-in-out;
         }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(56,189,248,0.5), inset 0 0 15px rgba(250,204,21,0.3); }
+            50% { box-shadow: 0 0 45px rgba(250,204,21,0.8), inset 0 0 30px rgba(56,189,248,0.7); }
+        }
+        .mining-circle {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+        @keyframes claimBurst {
+            0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.9); }
+            70% { transform: scale(1.08); opacity: 0.8; box-shadow: 0 0 0 35px rgba(56, 189, 248, 0); }
+            100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+        }
+        .claim-effect {
+            animation: claimBurst 0.8s ease-out;
+        }
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
     </style>
 </head>
-<body class="bg-gradient-to-b from-[#6366f1] via-[#4f46e5] to-[#312e81] text-white min-h-screen flex flex-col justify-between font-sans pb-28 select-none relative overflow-x-hidden">
+<body class="bg-[#0b091f] text-white font-sans min-h-screen overflow-x-hidden select-none">
 
-    <!-- SIDEBAR MENU -->
-    <div id="sidebar" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden transition-opacity duration-300">
-        <div class="absolute top-0 left-0 w-4/5 max-w-xs h-full bg-[#1e1b4b] border-r border-indigo-500/30 p-5 flex flex-col justify-between shadow-2xl overflow-y-auto">
-            <div>
-                <div class="flex justify-between items-center mb-6 border-b border-indigo-500/20 pb-4">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-amber-400 to-orange-500 flex items-center justify-center text-xl font-bold shadow-lg">🐅</div>
-                        <div>
-                            <div class="font-bold text-sm text-white">Sherzod Ismailov</div>
-                            <div class="text-[10px] text-indigo-300 font-mono">ID: #784920</div>
-                        </div>
-                    </div>
-                    <button onclick="toggleSidebar()" class="text-white text-xl p-1 hover:text-indigo-300 cursor-pointer">✕</button>
-                </div>
-                <div class="space-y-2">
-                    <button onclick="toggleSidebar(); openModal('settingsModal')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-indigo-900/40 text-indigo-100 transition">
-                        <div class="flex items-center space-x-3 text-sm font-medium"><span class="text-base">⚙️</span><span>Settings</span></div>
-                        <span class="text-indigo-400">›</span>
-                    </button>
-                    <button onclick="alert('Support center')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-indigo-900/40 text-indigo-100 transition">
-                        <div class="flex items-center space-x-3 text-sm font-medium"><span class="text-base">🎧</span><span>Support</span></div>
-                        <span class="text-indigo-400">›</span>
-                    </button>
-                    <button onclick="alert('Whitepaper opened')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-indigo-900/40 text-indigo-100 transition">
-                        <div class="flex items-center space-x-3 text-sm font-medium"><span class="text-base">📄</span><span>Whitepaper</span></div>
-                        <span class="text-indigo-400">›</span>
-                    </button>
-                    <button onclick="alert('Privacy Policy opened')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-indigo-900/40 text-indigo-100 transition">
-                        <div class="flex items-center space-x-3 text-sm font-medium"><span class="text-base">🔒</span><span>Privacy Policy</span></div>
-                        <span class="text-indigo-400">›</span>
-                    </button>
-                    <button onclick="alert('Website opened')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-indigo-900/40 text-indigo-100 transition">
-                        <div class="flex items-center space-x-3 text-sm font-medium"><span class="text-base">🌐</span><span>tolenocoin.com</span></div>
-                        <span class="text-indigo-400">›</span>
-                    </button>
-                    <button onclick="alert('Telegram channel opened')" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-indigo-900/40 text-indigo-100 transition">
-                        <div class="flex items-center space-x-3 text-sm font-medium"><span class="text-base">✈️</span><span>Telegram</span></div>
-                        <span class="text-indigo-400">›</span>
-                    </button>
+    <!-- Global Background Sparkles Container -->
+    <div id="bgSparkles" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
+
+    <!-- ==================== 1-BOSQICH: SPLASH SCREEN ==================== -->
+    <div id="splashScreen" class="fixed inset-0 z-50 flex flex-col items-center justify-between py-12 px-6 bg-gradient-to-b from-[#141038] via-[#0f0c29] to-[#070514] transition-opacity duration-700">
+        <div></div>
+        <div class="flex flex-col items-center text-center">
+            <div class="relative w-36 h-36 rounded-full p-1 bg-gradient-to-tr from-yellow-400 via-sky-400 to-blue-600 shadow-[0_0_35px_rgba(56,189,248,0.5)] mb-6 flex items-center justify-center">
+                <div class="w-full h-full bg-[#0d1b33] rounded-full flex items-center justify-center overflow-hidden border border-yellow-400/50">
+                    <svg viewBox="0 0 200 200" class="w-full h-full">
+                        <circle cx="100" cy="100" r="95" fill="#1da1f2" stroke="#facc15" stroke-width="4"/>
+                        <path d="M100 15 L100 40 M100 160 L100 185 M15 100 L40 100 M160 100 L185 100" stroke="#facc15" stroke-width="5" stroke-linecap="round"/>
+                        <circle cx="100" cy="100" r="75" fill="none" stroke="#facc15" stroke-width="1.5" stroke-dasharray="8 8"/>
+                        <text x="100" y="115" font-size="52" font-weight="900" fill="#facc15" text-anchor="middle" font-family="Arial">AK45</text>
+                    </svg>
                 </div>
             </div>
-            <div class="pt-4 border-t border-indigo-500/20">
-                <button onclick="alert('Session closed')" class="w-full flex items-center space-x-3 p-3 rounded-xl hover:bg-rose-950/30 text-rose-400 font-semibold text-sm">
-                    <span>🚪</span><span>Close Session</span>
+            <h1 class="text-2xl font-black tracking-wider bg-gradient-to-r from-white via-sky-200 to-yellow-300 bg-clip-text text-transparent uppercase mb-1">
+                Abduqodir Khusanov Fan Token
+            </h1>
+            <p class="text-xs text-sky-400 tracking-wide font-medium">Official BNB Fan Ecosystem</p>
+        </div>
+
+        <div class="flex flex-col items-center w-full max-w-xs space-y-4">
+            <div class="flex space-x-2">
+                <div class="w-2.5 h-2.5 bg-yellow-400 rounded-full animate-bounce"></div>
+                <div class="w-2.5 h-2.5 bg-sky-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                <div class="w-2.5 h-2.5 bg-purple-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+            </div>
+            <div class="w-full h-1 bg-gradient-to-r from-transparent via-yellow-400 via-sky-400 to-transparent rounded-full opacity-80"></div>
+            <div class="flex items-center space-x-2 bg-black/30 px-4 py-1.5 rounded-full border border-white/10">
+                <div class="w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center font-black text-[10px] text-black">B</div>
+                <span class="text-[10px] font-bold tracking-widest text-gray-300">POWERED BY BNB SMART CHAIN</span>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==================== 2-BOSQICH: MAIN APP SCREEN ==================== -->
+    <div id="mainApp" class="relative z-10 max-w-md mx-auto min-h-screen flex flex-col justify-between pb-24 pt-6 px-4 hidden">
+        
+        <!-- Top Navigation Bar -->
+        <div class="flex items-center justify-between mb-4">
+            <button onclick="openSidebar()" class="w-10 h-10 glass-panel rounded-xl flex flex-col items-center justify-center space-y-1 active:scale-95 transition">
+                <span class="w-5 h-0.5 bg-white rounded-full"></span>
+                <span class="w-5 h-0.5 bg-white rounded-full"></span>
+                <span class="w-5 h-0.5 bg-white rounded-full"></span>
+            </button>
+            <div class="text-center">
+                <p class="text-xs text-gray-400 font-medium">Current Balance</p>
+                <h2 id="balanceDisplay" class="text-2xl font-black text-yellow-300 tracking-wider">0.00000000</h2>
+                <span class="text-xs font-bold text-sky-400">AK45</span>
+            </div>
+            <button onclick="alert('Notification: No new notifications')" class="w-10 h-10 glass-panel rounded-xl flex items-center justify-center relative active:scale-95 transition">
+                <svg class="w-5 h-5 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+            </button>
+        </div>
+
+        <!-- 4 Quick Action Buttons -->
+        <div class="grid grid-cols-4 gap-2 mb-4">
+            <button onclick="openTop100()" class="glass-panel py-3 rounded-2xl flex flex-col items-center justify-center hover:bg-white/10 active:scale-95 transition">
+                <svg class="w-5 h-5 text-yellow-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                <span class="text-[11px] font-bold text-gray-200">TOP 100</span>
+            </button>
+            <button onclick="alert('Transfers feature coming soon!')" class="glass-panel py-3 rounded-2xl flex flex-col items-center justify-center hover:bg-white/10 active:scale-95 transition">
+                <svg class="w-5 h-5 text-sky-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                <span class="text-[11px] font-bold text-gray-200">Transfers</span>
+            </button>
+            <button onclick="alert('Premium features unlocked!')" class="glass-panel py-3 rounded-2xl flex flex-col items-center justify-center hover:bg-white/10 active:scale-95 transition">
+                <svg class="w-5 h-5 text-yellow-300 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                <span class="text-[11px] font-bold text-gray-200">Premium</span>
+            </button>
+            <button onclick="alert('Wallet Connected: BNB Smart Chain')" class="glass-panel py-3 rounded-2xl flex flex-col items-center justify-center hover:bg-white/10 active:scale-95 transition">
+                <svg class="w-5 h-5 text-purple-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                <span class="text-[11px] font-bold text-gray-200">Wallet</span>
+            </button>
+        </div>
+
+        <!-- BNB Market Panel & Mining Status -->
+        <div class="glass-panel px-4 py-2.5 rounded-2xl flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-2">
+                <div class="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center font-bold text-xs text-black">B</div>
+                <span class="text-xs font-bold tracking-wide">BNB $645.50</span>
+            </div>
+            <div class="flex items-center space-x-1.5">
+                <span class="text-xs text-green-400 font-bold">+3.45%</span>
+                <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span>
+            </div>
+        </div>
+
+        <div class="text-center mb-3">
+            <span class="text-xs font-semibold text-gray-300">Mining Status: </span>
+            <span id="miningStatusText" class="text-xs font-bold text-yellow-400">Inactive</span>
+        </div>
+
+        <!-- Central Mining Circle & Stats -->
+        <div class="relative flex items-center justify-center my-2">
+            <!-- Left Stats: Hourly Earnings -->
+            <div class="absolute left-0 text-left z-10">
+                <p class="text-[11px] text-gray-400 font-medium">Hourly Earnings</p>
+                <p class="text-sm font-black text-sky-300">1.875 AK45</p>
+                <div class="w-20 h-0.5 bg-gradient-to-r from-sky-400 to-transparent mt-1"></div>
+            </div>
+
+            <!-- Main Interactive Mining Button -->
+            <div id="miningBtnContainer" onclick="toggleMining()" class="w-48 h-48 rounded-full glass-panel mining-circle flex flex-col items-center justify-center cursor-pointer relative transition active:scale-95">
+                <div class="absolute inset-2 rounded-full border border-white/20 pointer-events-none"></div>
+                <svg class="w-8 h-8 text-yellow-400 mb-1 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                <h3 id="miningBtnTitle" class="text-base font-black tracking-wide text-white">Start Mining</h3>
+                <p id="timerDisplay" class="text-xs font-bold text-yellow-300 mt-1">24:00:00</p>
+            </div>
+
+            <!-- Right Stats: 24 Hours -->
+            <div class="absolute right-0 text-right z-10">
+                <p class="text-[11px] text-gray-400 font-medium">24 Hours</p>
+                <p class="text-sm font-black text-yellow-300">45 AK45</p>
+                <div class="w-20 h-0.5 bg-gradient-to-l from-yellow-400 to-transparent mt-1 ml-auto"></div>
+            </div>
+        </div>
+
+        <!-- Live Miner Ticker Bar -->
+        <div class="glass-panel px-4 py-2.5 rounded-xl my-4 text-center">
+            <p id="liveTicker" class="text-xs text-gray-300 font-medium truncate">⛏️ Ecosystem ready for AK45 mining</p>
+        </div>
+
+        <!-- Two Bottom Info Cards (Days & Team) -->
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="glass-panel p-3.5 rounded-2xl flex flex-col justify-center">
+                <div class="flex items-center space-x-2 mb-1">
+                    <span class="text-lg">🐯</span>
+                    <span class="text-xs font-bold text-gray-200">1 day</span>
+                </div>
+                <p class="text-[11px] text-gray-400">1-chi qazib olish</p>
+            </div>
+            <div class="glass-panel p-3.5 rounded-2xl flex flex-col justify-center relative cursor-pointer" onclick="alert('Team Referral Menu')">
+                <div class="flex items-center justify-between mb-1">
+                    <span class="text-xs font-bold text-white">Team</span>
+                    <span class="bg-yellow-500/20 text-yellow-400 text-[10px] px-1.5 py-0.5 rounded-full font-bold">poke</span>
+                </div>
+                <div class="flex items-center -space-x-2 mt-1">
+                    <div class="w-6 h-6 rounded-full bg-yellow-400 flex items-center justify-center text-[10px] font-black text-black">A</div>
+                    <div class="w-6 h-6 rounded-full bg-sky-400 flex items-center justify-center text-[10px] font-black text-black">B</div>
+                    <div class="w-6 h-6 rounded-full bg-purple-400 flex items-center justify-center text-[10px] font-black text-black">C</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Worldwide Total Mined: Starts from 0 because no one started mining yet -->
+        <div class="text-center my-2">
+            <p class="text-[10px] font-bold text-gray-400 tracking-widest uppercase mb-1">WORLD WIDE TOTAL AK45</p>
+            <h4 id="worldwideDisplay" class="text-lg font-black text-sky-400 tracking-wider">0 <span class="text-xs font-bold text-white">AK45</span></h4>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="fixed bottom-0 left-0 right-0 bg-[#0c0926]/90 backdrop-blur-md border-t border-white/10 px-4 py-2 flex items-center justify-around z-40 max-w-md mx-auto">
+            <button onclick="switchNav(this)" class="flex flex-col items-center text-sky-400">
+                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span class="text-[10px] font-bold">Home</span>
+            </button>
+            <button onclick="switchNav(this)" class="flex flex-col items-center text-gray-400 hover:text-white">
+                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                <span class="text-[10px] font-medium">Market</span>
+            </button>
+            <button onclick="switchNav(this)" class="flex flex-col items-center text-gray-400 hover:text-white">
+                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span class="text-[10px] font-medium">Team</span>
+            </button>
+            <button onclick="switchNav(this)" class="flex flex-col items-center text-gray-400 hover:text-white">
+                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                <span class="text-[10px] font-medium">Tasks</span>
+            </button>
+            <button onclick="switchNav(this)" class="flex flex-col items-center text-gray-400 hover:text-white">
+                <div class="w-6 h-6 rounded-full bg-yellow-500/30 flex items-center justify-center mb-0.5 text-xs">🐯</div>
+                <span class="text-[10px] font-medium">Profile</span>
+            </button>
+        </div>
+
+    </div>
+
+
+    <!-- ==================== 3-BOSQICH: SIDEBAR MENU & SUB-VIEWS ==================== -->
+    
+    <!-- Sidebar Drawer -->
+    <div id="sidebar" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden transition-opacity">
+        <div class="absolute left-0 top-0 bottom-0 w-72 bg-[#120e2e] p-6 flex flex-col justify-between shadow-2xl border-r border-white/10">
+            <div>
+                <div class="flex items-center space-x-3 pb-6 border-b border-white/10 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-yellow-400 to-sky-400 flex items-center justify-center text-2xl shadow-lg">
+                        🐯
+                    </div>
+                    <div>
+                        <h3 id="sidebarUserName" class="font-black text-base text-white">Abduqodir Khusanov</h3>
+                        <p class="text-xs text-sky-400 font-medium">Miner ID: #AK45-7788</p>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <button onclick="openSettings()" class="w-full text-left px-4 py-3 rounded-xl glass-panel hover:bg-white/10 flex items-center justify-between text-sm font-bold transition">
+                        <span>SETTINGS</span>
+                        <span class="text-gray-400">&gt;</span>
+                    </button>
+                    <button onclick="alert('AK45 Fan Token: Total supply ecosystem on BNB Chain.')" class="w-full text-left px-4 py-3 rounded-xl glass-panel hover:bg-white/10 flex items-center justify-between text-sm font-bold transition">
+                        <span>AK45 FAN TOKEN</span>
+                        <span class="text-gray-400">&gt;</span>
+                    </button>
+                    <button onclick="alert('Contract Address: 0xAK45...BNB8899')" class="w-full text-left px-4 py-3 rounded-xl glass-panel hover:bg-white/10 flex items-center justify-between text-sm font-bold transition">
+                        <span class="truncate text-xs">VIEW CONTRACT ADDRESS IN BNB EXPLORER</span>
+                        <span class="text-gray-400">&gt;</span>
+                    </button>
+                    <button onclick="alert('Opening Telegram Community Group...')" class="w-full text-left px-4 py-3 rounded-xl glass-panel hover:bg-white/10 flex items-center justify-between text-sm font-bold transition">
+                        <span>TELEGRAM COMMUNITY GROUP</span>
+                                          <span class="text-gray-400">&gt;</span>
+                </button>
+                <button onclick="alert('Opening Telegram Community Group...')" class="w-full text-left px-4 py-3 rounded-xl glass-panel hover:bg-white/10 flex items-center justify-between text-sm font-bold transition">
+                    <span>TELEGRAM COMMUNITY GROUP</span>
+                    <span class="text-gray-400">&gt;</span>
                 </button>
             </div>
         </div>
+
+        <button onclick="closeSidebar()" class="w-full py-3 rounded-xl bg-red-500/20 text-red-400 font-bold text-sm hover:bg-red-500/30 transition">
+            Close Menu
+        </button>
+    </div>
+    <div class="absolute inset-0 -z-10" onclick="closeSidebar()"></div>
+</div>
+
+
+<!-- SETTINGS SUB-VIEW -->
+<div id="settingsView" class="fixed inset-0 z-50 bg-[#0f0c29] p-6 hidden flex flex-col">
+    <div class="flex items-center justify-between mb-6">
+        <button onclick="closeSettings()" class="w-10 h-10 glass-panel rounded-xl flex items-center justify-center font-bold text-lg">&larr;</button>
+        <h2 class="text-lg font-black tracking-wider">SETTINGS</h2>
+        <div class="w-10"></div>
     </div>
 
-    <!-- NOTIFICATIONS MODAL -->
-    <div id="notificationsModal" class="fixed inset-0 z-50 bg-[#312e81] hidden flex flex-col p-4">
-        <div class="flex items-center justify-between py-2 mb-6">
-            <button onclick="closeModal('notificationsModal')" class="text-white text-xl p-1">←</button>
-            <h2 class="text-base font-bold text-white">Notifications</h2>
-            <div class="w-6"></div>
-        </div>
-        <div class="flex-1 flex flex-col items-center justify-center text-center space-y-3">
-            <div class="w-16 h-16 rounded-full bg-indigo-950/60 border border-indigo-500/30 flex items-center justify-center text-2xl text-indigo-400">🔕</div>
-            <div class="text-base font-bold text-white">No notifications yet</div>
-            <div class="text-xs text-indigo-300">New notifications will appear here</div>
-        </div>
-    </div>
-
-    <!-- SETTINGS MODAL -->
-    <div id="settingsModal" class="fixed inset-0 z-50 bg-[#312e81] hidden flex flex-col p-4 overflow-y-auto">
-        <div class="flex items-center justify-between py-2 mb-4 border-b border-indigo-500/20 pb-3">
-            <button onclick="closeModal('settingsModal')" class="text-white text-xl p-1">←</button>
-            <h2 class="text-base font-bold text-white">Settings</h2>
-            <div class="w-6"></div>
-        </div>
-        <div class="space-y-3 max-w-md mx-auto w-full pb-10">
-            <div onclick="openModal('languageModal')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 flex justify-between items-center cursor-pointer hover:bg-indigo-900/40">
-                <div class="flex items-center space-x-3">
-                    <span class="text-lg">🌐</span>
-                    <div>
-                        <div class="text-sm font-bold">Select Language</div>
-                        <div id="currentLangLabel" class="text-xs text-indigo-300">English</div>
-                    </div>
-                </div>
-                <span class="text-indigo-400">›</span>
-            </div>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <span class="text-lg">🔔</span>
-                    <div>
-                        <div class="text-sm font-bold">Notifications</div>
-                        <div class="text-xs text-indigo-300">Receive push notifications</div>
-                    </div>
-                </div>
-                <input type="checkbox" checked class="w-5 h-5 accent-cyan-400 cursor-pointer">
-            </div>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <span class="text-lg">🔊</span>
-                    <div>
-                        <div class="text-sm font-bold">Sound Effects</div>
-                        <div class="text-xs text-indigo-300">Toggle app sounds on/off</div>
-                    </div>
-                </div>
-                <input type="checkbox" class="w-5 h-5 accent-cyan-400 cursor-pointer">
-            </div>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 flex justify-between items-center cursor-pointer hover:bg-indigo-900/40" onclick="alert('API Keys management')">
-                <div class="flex items-center space-x-3">
-                    <span class="text-lg">☀️</span>
-                    <div>
-                        <div class="text-sm font-bold">API Keys</div>
-                        <div class="text-xs text-indigo-300">Manage keys for AI integrations</div>
-                    </div>
-                </div>
-                <span class="text-indigo-400">›</span>
-            </div>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 flex justify-between items-center cursor-pointer hover:bg-indigo-900/40" onclick="alert('Privacy Policy')">
-                <div class="flex items-center space-x-3">
-                    <span class="text-lg">📄</span>
-                    <div class="text-sm font-bold">Privacy Policy</div>
-                </div>
-                <span class="text-indigo-400">›</span>
-            </div>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 flex justify-between items-center cursor-pointer hover:bg-indigo-900/40" onclick="alert('Support')">
-                <div class="flex items-center space-x-3">
-                    <span class="text-lg">🎧</span>
-                    <div class="text-sm font-bold">Support</div>
-                </div>
-                <span class="text-indigo-400">›</span>
-            </div>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 flex justify-between items-center cursor-pointer hover:bg-indigo-900/40" onclick="alert('Logged out')">
-                <div class="flex items-center space-x-3">
-                    <span class="text-lg text-amber-400">🚪</span>
-                    <div class="text-sm font-bold text-amber-400">Logout</div>
-                </div>
-                <span class="text-indigo-400">›</span>
-            </div>
-            <div class="pt-2">
-                <div class="text-xs font-bold text-rose-400 uppercase tracking-wider mb-2">Danger Zone</div>
-                <div class="bg-rose-950/30 border border-rose-500/30 rounded-2xl p-4 flex justify-between items-center cursor-pointer hover:bg-rose-900/30" onclick="confirm('Are you sure you want to delete your account?') && alert('Account deleted')">
-                    <div class="text-sm font-bold text-rose-400">Delete Account</div>
-                    <span class="text-rose-400">›</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- LANGUAGE SELECTION MODAL -->
-    <div id="languageModal" class="fixed inset-0 z-50 bg-[#312e81] hidden flex flex-col p-4 overflow-y-auto">
-        <div class="flex items-center justify-between py-2 mb-4 border-b border-indigo-500/20 pb-3">
-            <button onclick="closeModal('languageModal')" class="text-white text-xl p-1">←</button>
-            <h2 class="text-base font-bold text-white">Select Language</h2>
-            <div class="w-6"></div>
-        </div>
-        <div class="space-y-2 max-w-md mx-auto w-full pb-10">
-            <div onclick="setLanguage('English')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇬🇧 English</span><span class="text-cyan-400">✓</span></div>
-            <div onclick="setLanguage('Oʻzbekcha')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇺🇿 Oʻzbekcha</span></div>
-            <div onclick="setLanguage('Русский')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇷🇺 Русский</span></div>
-            <div onclick="setLanguage('Français')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇫🇷 Français</span></div>
-            <div onclick="setLanguage('Deutsch')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇩🇪 Deutsch</span></div>
-            <div onclick="setLanguage('Español')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇪🇸 Español</span></div>
-            <div onclick="setLanguage('中文')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇨🇳 中文 (Chinese)</span></div>
-            <div onclick="setLanguage('한국어')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇰🇷 한국어 (Korean)</span></div>
-            <div onclick="setLanguage('日本語')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇯🇵 日本語 (Japanese)</span></div>
-            <div onclick="setLanguage('Indonesia')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇮🇩 Indonesia</span></div>
-            <div onclick="setLanguage('العربية')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇸🇦 العربية (Arabic)</span></div>
-            <div onclick="setLanguage('Türkçe')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇹🇷 Türkçe</span></div>
-            <div onclick="setLanguage('हिन्दी')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇮🇳 हिन्दी (Hindi)</span></div>
-            <div onclick="setLanguage('Italiano')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇮🇹 Italiano</span></div>
-            <div onclick="setLanguage('Português')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇵🇹 Português</span></div>
-            <div onclick="setLanguage('Tiếng Việt')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇻🇳 Tiếng Việt</span></div>
-            <div onclick="setLanguage('Polski')" class="bg-indigo-950/60 border border-indigo-500/30 rounded-xl p-3.5 flex justify-between items-center cursor-pointer hover:bg-indigo-900/50"><span>🇵🇱 Polski</span></div>
-        </div>
-    </div>
-
-    <!-- TOP HEADER -->
-    <div class="px-4 py-3 flex justify-between items-center">
-        <button onclick="toggleSidebar()" class="text-white hover:opacity-80 cursor-pointer text-xl p-1 font-bold">☰</button>
-        <div class="text-center">
-            <div class="text-xs text-indigo-200 uppercase tracking-wider font-medium">Current Balance</div>
-            <div id="balanceDisplay" class="text-3xl font-black tracking-tight text-white">0.00</div>
-            <div class="text-xs font-bold text-amber-400">AK45</div>
-        </div>
-        <button onclick="openModal('notificationsModal')" class="text-white hover:opacity-80 cursor-pointer text-xl p-1">🔔</button>
-    </div>
-
-    <!-- MAIN CONTAINER -->
-    <div class="px-4 py-2 flex-1 flex flex-col items-center max-w-md mx-auto w-full space-y-4">
+    <div class="space-y-3 flex-1 overflow-y-auto">
+        <button onclick="openLanguageModal()" class="w-full px-4 py-3.5 rounded-2xl glass-panel flex items-center justify-between font-bold text-sm hover:bg-white/10 transition">
+            <span>Select Language</span>
+            <span id="currentLangLabel" class="text-sky-400 text-xs">O'zbek &gt;</span>
+        </button>
         
-        <div class="w-full bg-indigo-950/40 backdrop-blur-md border border-indigo-500/30 rounded-2xl p-3 grid grid-cols-4 gap-2 shadow-lg">
-            <button onclick="alert('TOP 50 coming soon!')" class="flex flex-col items-center justify-center space-y-1 text-indigo-200 hover:text-white cursor-pointer">
-                <div class="w-9 h-9 rounded-xl bg-indigo-600/40 flex items-center justify-center border border-indigo-400/30 text-base">🏆</div>
-                <span class="text-[10px] font-semibold">TOP 50</span>
-            </button>
-            <button onclick="switchTab('wallet')" class="flex flex-col items-center justify-center space-y-1 text-indigo-200 hover:text-white cursor-pointer">
-                <div class="w-9 h-9 rounded-xl bg-indigo-600/40 flex items-center justify-center border border-indigo-400/30 text-base">🔄</div>
-                <span class="text-[10px] font-semibold">Transfers</span>
-            </button>
-            <button onclick="alert('Premium feature!')" class="flex flex-col items-center justify-center space-y-1 text-indigo-200 hover:text-white cursor-pointer">
-                <div class="w-9 h-9 rounded-xl bg-indigo-600/40 flex items-center justify-center border border-indigo-400/30 text-base">👑</div>
-                <span class="text-[10px] font-semibold">Premium</span>
-            </button>
-            <button onclick="switchTab('profile')" class="flex flex-col items-center justify-center space-y-1 text-indigo-200 hover:text-white cursor-pointer">
-                <div class="w-9 h-9 rounded-xl bg-indigo-600/40 flex items-center justify-center border border-indigo-400/30 text-base">👛</div>
-                <span class="text-[10px] font-semibold">Wallet</span>
-            </button>
+        <div class="w-full px-4 py-3.5 rounded-2xl glass-panel flex items-center justify-between font-bold text-sm">
+            <span>Notifications</span>
+            <input type="checkbox" checked class="w-5 h-5 accent-yellow-400 cursor-pointer">
         </div>
 
-        <!-- TAB 1: HOME -->
-        <div id="tab-home" class="w-full flex flex-col items-center space-y-4">
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-full px-4 py-1.5 flex items-center space-x-2 text-xs shadow-md">
-                <div class="w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center text-[10px] font-bold text-black">B</div>
-                <span class="font-bold text-indigo-100">AK45/BNB $0.124</span>
-                <span class="text-emerald-400 font-semibold flex items-center">▲ +3.49%</span>
-            </div>
-
-            <div class="text-xs font-medium text-indigo-200">
-                Mining Status: <span id="miningStatusText" class="font-bold text-emerald-400">Stopped</span>
-            </div>
-
-            <div class="relative w-56 h-56 flex items-center justify-center cursor-pointer" onclick="startMining()">
-                <div class="absolute inset-0 rounded-full border-4 border-indigo-500/20"></div>
-                <div class="absolute inset-1 rounded-full border-2 border-cyan-400 border-dashed animate-spin-slow"></div>
-                
-                <div class="w-48 h-48 rounded-full bg-gradient-to-b from-[#312e81] to-[#1e1b4b] border-4 border-indigo-500/40 flex flex-col items-center justify-center shadow-2xl transition-transform active:scale-95">
-                    <div id="timerDisplay" class="text-3xl font-black tracking-wider text-white mb-1">24:00:00</div>
-                    <div id="timerSubtitle" class="text-[11px] text-indigo-300 font-medium">Time Left</div>
-                </div>
-            </div>
-
-            <div class="w-full grid grid-cols-2 gap-3 text-center">
-                <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-2xl p-3 backdrop-blur-md">
-                    <div class="text-xs text-indigo-300 mb-1">Hourly Earnings</div>
-                    <div class="text-sm font-black text-white">1.17 AK45</div>
-                </div>
-                <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-2xl p-3 backdrop-blur-md">
-                    <div class="text-xs text-indigo-300 mb-1">24 Hours</div>
-                    <div class="text-sm font-black text-white">28 AK45</div>
-                </div>
-            </div>
-
-            <div class="w-full bg-            <div class="w-full bg-indigo-950/50 border border-indigo-500/30 rounded-2xl p-2.5 flex items-center justify-between text-xs backdrop-blur-md">
-                <div class="flex items-center space-x-2">
-                    <div class="w-7 h-7 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold">⚡</div>
-                    <span class="text-indigo-200">Alex M. <span class="text-white font-semibold">42 AK45 earned</span></span>
-                </div>
-                <span class="text-indigo-400 text-[10px]">Just now</span>
-            </div>
-
-            <div class="w-full grid grid-cols-2 gap-3">
-                <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-2xl p-3 backdrop-blur-md flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-600/30 flex items-center justify-center text-lg">🐅</div>
-                    <div>
-                        <div class="text-xs font-bold">203 days</div>
-                        <div class="text-[10px] text-indigo-300">132 times</div>
-                    </div>
-                </div>
-                <div onclick="switchTab('team')" class="bg-indigo-950/40 border border-indigo-500/30 rounded-2xl p-3 backdrop-blur-md flex justify-between items-center cursor-pointer">
-                    <div>
-                        <div class="text-xs font-bold mb-1">Team</div>
-                        <div class="flex -space-x-1.5">
-                            <div class="w-6 h-6 rounded-full bg-amber-500 text-[10px] flex items-center justify-center font-bold text-black">A</div>
-                            <div class="w-6 h-6 rounded-full bg-cyan-500 text-[10px] flex items-center justify-center font-bold text-black">B</div>
-                            <div class="w-6 h-6 rounded-full bg-emerald-500 text-[10px] flex items-center justify-center font-bold text-black">C</div>
-                        </div>
-                    </div>
-                    <span class="text-indigo-400">›</span>
-                </div>
-            </div>
+        <div class="w-full px-4 py-3.5 rounded-2xl glass-panel flex items-center justify-between font-bold text-sm">
+            <span>Sound Effects</span>
+            <input type="checkbox" checked class="w-5 h-5 accent-yellow-400 cursor-pointer">
         </div>
 
-        <!-- TAB 2: MARKET -->
-        <div id="tab-market" class="w-full hidden flex-col space-y-4">
-            <h2 class="text-lg font-bold text-white">Market & Boosts</h2>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 backdrop-blur-md">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="font-bold text-sm">Turbo Speed (+50%)</span>
-                    <span class="text-xs bg-indigo-600/40 text-indigo-200 px-2 py-1 rounded-lg font-semibold">0.05 BNB</span>
-                </div>
-                <p class="text-xs text-indigo-300 mb-3">Boosts your mining speed for 24 hours.</p>
-                <button onclick="alert('Coming soon!')" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl text-xs cursor-pointer">Buy Now</button>
-            </div>
-        </div>
-
-        <!-- TAB 3: TEAM -->
-        <div id="tab-team" class="w-full hidden flex-col space-y-4">
-            <h2 class="text-lg font-bold text-white">Referral Program</h2>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 backdrop-blur-md text-center">
-                <p class="text-xs text-indigo-300 mb-3">Invite friends and get +10% bonuses!</p>
-                <div class="bg-indigo-900/50 border border-indigo-500/40 rounded-xl p-2.5 flex items-center justify-between">
-                    <span class="text-xs text-indigo-200 truncate font-mono">t.me/AK45Mining_bot?start=ref</span>
-                    <button onclick="alert('Link Copied!')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Copy</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 4: TASKS -->
-        <div id="tab-tasks" class="w-full hidden flex-col space-y-3">
-            <h2 class="text-lg font-bold text-white">Daily Tasks</h2>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-3.5 flex justify-between items-center backdrop-blur-md">
-                <div>
-                    <div class="font-bold text-sm">Join Telegram Channel</div>
-                    <div class="text-xs text-indigo-300">+10 AK45</div>
-                </div>
-                <button onclick="alert('Completed!')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">Claim</button>
-            </div>
-        </div>
-
-        <!-- TAB 5: PROFILE -->
-        <div id="tab-profile" class="w-full hidden flex-col space-y-4">
-            <h2 class="text-lg font-bold text-white">User Profile</h2>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 backdrop-blur-md flex items-center space-x-3">
-                <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-lg text-white">U</div>
-                <div>
-                    <div class="font-bold text-sm">Crypto Miner</div>
-                    <div class="text-xs text-indigo-300 font-mono">ID: #784920</div>
-                </div>
-            </div>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 rounded-2xl p-4 backdrop-blur-md">
-                <h3 class="text-sm font-bold mb-2">Connect BEP-20 Wallet</h3>
-                <div id="walletSection">
-                    <input type="text" id="walletInput" placeholder="Paste wallet address (0x...)" class="w-full bg-indigo-900/50 border border-indigo-500/40 rounded-xl px-3 py-2 text-xs text-white outline-none mb-2 placeholder-indigo-400">
-                    <button onclick="connectWallet()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl text-xs cursor-pointer">Connect Wallet</button>
-                </div>
-                <div id="walletConnectedBox" class="hidden space-y-2">
-                    <div id="connectedAddress" class="bg-emerald-950/50 border border-emerald-500/40 rounded-xl p-2.5 text-xs text-emerald-300 font-mono truncate"></div>
-                    <button onclick="disconnectWallet()" class="text-xs text-rose-400 font-semibold underline cursor-pointer">Disconnect Wallet</button>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- BOTTOM NAVIGATION -->
-    <div class="fixed bottom-0 left-0 right-0 bg-[#1e1b4b]/95 backdrop-blur-md border-t border-indigo-500/30 py-2 px-6 flex justify-around items-center z-40 shadow-2xl">
-        <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center space-y-1 text-cyan-400 cursor-pointer">
-            <span class="text-lg">🏠</span><span class="text-[10px] font-semibold">Home</span>
+        <button onclick="openSecurityModal()" class="w-full px-4 py-3.5 rounded-2xl glass-panel flex items-center justify-between font-bold text-sm hover:bg-white/10 transition">
+            <span>Security</span>
+            <span class="text-gray-400">&gt;</span>
         </button>
-        <button onclick="switchTab('market')" id="nav-market" class="flex flex-col items-center space-y-1 text-indigo-300 cursor-pointer">
-            <span class="text-lg">🛒</span><span class="text-[10px] font-semibold">Market</span>
+
+        <button onclick="alert('Logged out successfully.')" class="w-full px-4 py-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-between font-bold text-sm hover:bg-red-500/20 transition">
+            <span>Logout</span>
+            <span>&gt;</span>
         </button>
-        <button onclick="switchTab('team')" id="nav-team" class="flex flex-col items-center space-y-1 text-indigo-300 cursor-pointer">
-            <span class="text-lg">👥</span><span class="text-[10px] font-semibold">Team</span>
-        </button>
-        <button onclick="switchTab('tasks')" id="nav-tasks" class="flex flex-col items-center space-y-1 text-indigo-300 cursor-pointer">
-            <span class="text-lg">📋</span><span class="text-[10px] font-semibold">Tasks</span>
-        </button>
-        <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center space-y-1 text-indigo-300 cursor-pointer">
-            <span class="text-lg">👤</span><span class="text-[10px] font-semibold">Profile</span>
+
+        <button onclick="confirm('Are you sure you want to delete your account?')" class="w-full px-4 py-3.5 rounded-2xl bg-red-600/20 border border-red-600/30 text-red-500 flex items-center justify-between font-bold text-sm hover:bg-red-600/30 transition">
+            <span>Delete Account</span>
+            <span>&gt;</span>
         </button>
     </div>
+</div>
 
-    <!-- SCRIPTS -->
-    <script>
-        let balance = 0.00;
-        let miningActive = false;
-        let timeLeft = 86400;
-        let timerInterval = null;
-        let walletAddress = "";
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('hidden');
-        }
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.remove('hidden');
-        }
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-        }
-        function setLanguage(langName) {
-            document.getElementById('currentLangLabel').innerText = langName;
-            closeModal('languageModal');
-        }
-        function switchTab(tabName) {
-            ['home', 'market', 'team', 'tasks', 'profile'].forEach(t => {
-                const tabEl = document.getElementById('tab-' + t);
-                if (tabEl) {
-                    tabEl.classList.add('hidden');
-                    tabEl.classList.remove('flex');
-                }
-                const navEl = document.getElementById('nav-' + t);
-                if (navEl) {
-                    navEl.className = "flex flex-col items-center space-y-1 text-indigo-300 cursor-pointer";
-                }
-            });
-            const activeTab = document.getElementById('tab-' + tabName);
-            if (activeTab) {
-                activeTab.classList.remove('hidden');
-                activeTab.classList.add('flex');
-            }
-            const activeNav = document.getElementById('nav-' + tabName);
-            if (activeNav) {
-                activeNav.className = "flex flex-col items-center space-y-1 text-cyan-400 cursor-pointer";
-            }
-        }
-        function startMining() {
-            if (miningActive) return;
-            miningActive = true;
-            document.getElementById('miningStatusText').innerText = "Active";
-            document.getElementById('miningStatusText').className = "font-bold text-cyan-400";
-            document.getElementById('timerSubtitle').innerText = "Mining in progress";
+<!-- LANGUAGE SELECTOR MODAL -->
+<div id="languageModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-end justify-center">
+    <div class="w-full max-w-md bg-[#141038] rounded-t-3xl p-6 max-h-[80vh] flex flex-col border-t border-white/10">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-black text-base">Select Language</h3>
+            <button onclick="closeLanguageModal()" class="text-gray-400 font-bold text-lg">&times;</button>
+        </div>
+        <div id="langList" class="space-y-2 overflow-y-auto pr-1">
+            <!-- Dynamically populated 15 languages -->
+        </div>
+    </div>
+</div>
 
-            if (timerInterval) clearInterval(timerInterval);
+
+<!-- SECURITY MODAL (Email & OTP verification) -->
+<div id="securityModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="w-full max-w-sm bg-[#141038] rounded-2xl p-6 border border-white/15">
+        <h3 class="font-black text-base mb-2">Security Verification</h3>
+        <p class="text-xs text-gray-400 mb-4">Protect your mining account by verifying your email address with .com extension.</p>
+        
+        <div class="space-y-3 mb-4">
+            <div class="flex items-center glass-panel rounded-xl px-3 py-2">
+                <input id="emailInput" type="text" placeholder="yourname@gmail" class="bg-transparent text-sm flex-1 outline-none text-white placeholder-gray-500">
+                <span class="text-sm font-bold text-yellow-400">.com</span>
+            </div>
+            <div id="otpSection" class="hidden">
+                <input id="otpInput" type="text" placeholder="Enter 6-digit OTP code" class="w-full glass-panel rounded-xl px-3 py-2 text-sm outline-none text-white placeholder-gray-500 tracking-widest text-center">
+            </div>
+        </div>
+
+        <div class="flex space-x-2">
+            <button onclick="closeSecurityModal()" class="flex-1 py-2.5 rounded-xl bg-white/10 text-xs font-bold hover:bg-white/20 transition">Cancel</button>
+            <button id="securityActionBtn" onclick="handleSecurityStep()" class="flex-1 py-2.5 rounded-xl bg-yellow-400 text-black text-xs font-black hover:bg-yellow-300 transition">Send Code</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- TOP 100 LEADERS VIEW -->
+<div id="top100View" class="fixed inset-0 z-50 bg-[#0f0c29] p-4 hidden flex flex-col">
+    <div class="flex items-center justify-between mb-4">
+        <button onclick="closeTop100()" class="w-10 h-10 glass-panel rounded-xl flex items-center justify-center font-bold text-lg">&larr;</button>
+        <h2 class="text-base font-black tracking-wider">Top 100 Leaders</h2>
+        <div class="w-10"></div>
+    </div>
+
+    <!-- Weekly / Global Tabs -->
+    <div class="flex glass-panel p-1 rounded-2xl mb-4">
+        <button id="tabWeekly" onclick="switchTab('weekly')" class="flex-1 py-2 rounded-xl bg-yellow-500 text-black font-black text-xs transition">Weekly</button>
+        <button id="tabGlobal" onclick="switchTab('global')" class="flex-1 py-2 rounded-xl text-gray-300 font-bold text-xs transition">Global</button>
+    </div>
+
+    <!-- Your Rank Banner -->
+    <div class="glass-panel p-3 rounded-2xl mb-4 text-center">
+        <p class="text-[10px] text-gray-400 uppercase font-bold mb-1">Your Rank</p>
+        <div class="flex justify-around text-xs font-black">
+            <span class="text-sky-400">Global Rank #1877</span>
+            <span class="text-yellow-300">Weekly Rank #6628</span>
+        </div>
+    </div>
+
+    <!-- Leaderboard List -->
+    <div id="leaderboardList" class="flex-1 overflow-y-auto space-y-2 pr-1">
+        <!-- Populated via script -->
+    </div>
+</div>
+
+
+<!-- ==================== JAVASCRIPT LOGIC ==================== -->
+<script>
+    // 1. Generate Floating Sparkles across the whole app
+    const sparkleContainer = document.getElementById('bgSparkles');
+    for (let i = 0; i < 25; i++) {
+        const sp = document.createElement('div');
+        sp.className = 'sparkle';
+        sp.style.width = `${Math.random() * 6 + 3}px`;
+        sp.style.height = sp.style.width;
+        sp.style.left = `${Math.random() * 100}%`;
+        sp.style.top = `${Math.random() * 100}%`;
+        sp.style.animationDuration = `${Math.random() * 3 + 3}s`;
+        sp.style.animationDelay = `${Math.random() * 2}s`;
+        sparkleContainer.appendChild(sp);
+    }
+
+    // Splash screen auto hide after 2.5 seconds
+    setTimeout(() => {
+        const splash = document.getElementById('splashScreen');
+        splash.style.opacity = '0';
+        setTimeout(() => {
+            splash.style.display = 'none';
+            document.getElementById('mainApp').classList.remove('hidden');
+        }, 700);
+    }, 2500);
+
+    // Mining Mechanics state
+    let isMining = false;
+    let balance = 0.00000000;
+    let secondsLeft = 86400; // 24 hours in seconds
+    let timerInterval = null;
+
+    function toggleMining() {
+        const btnContainer = document.getElementById('miningBtnContainer');
+        const btnTitle = document.getElementById('miningBtnTitle');
+        const statusText = document.getElementById('miningStatusText');
+
+        if (!isMining) {
+            // Start mining
+            isMining = true;
+            statusText.innerText = "Active";
+            statusText.className = "text-xs font-bold text-green-400";
+            btnTitle.innerText = "Mining...";
+            btnContainer.classList.add('claim-effect');
+            setTimeout(() => btnContainer.classList.remove('claim-effect'), 800);
+
+            // Start timer and real-time AK45 accumulation (1.875 AK45 per hour = 0.0005208 AK45 per second)
             timerInterval = setInterval(() => {
-                if (timeLeft > 0) {
-                    timeLeft--;
-                    balance += 0.000325;
-                    updateUI();
-                } else {
-                    miningActive = false;
+                secondsLeft--;
+                balance += 0.00052083;
+                document.getElementById('balanceDisplay').innerText = balance.toFixed(8);
+
+                let h = Math.floor(secondsLeft / 3600);
+                let m = Math.floor((secondsLeft % 3600) / 60);
+                let s = secondsLeft % 60;
+                document.getElementById('timerDisplay').innerText = 
+                    `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+
+                if (secondsLeft <= 0) {
                     clearInterval(timerInterval);
-                    timeLeft = 86400;
-                    document.getElementById('miningStatusText').innerText = "Stopped";
-                    document.getElementById('miningStatusText').className = "font-bold text-emerald-400";
+                    isMining = false;
+                    btnTitle.innerText = "Claim AK45";
+                    statusText.innerText = "Completed";
                 }
             }, 1000);
+        } else if (secondsLeft <= 0) {
+            // Claim reward
+            alert("Successfully claimed 45 AK45 tokens!");
+            secondsLeft = 86400;
+            btnTitle.innerText = "Start Mining";
+            statusText.innerText = "Inactive";
+            statusText.className = "text-xs font-bold text-yellow-400";
         }
-        function updateUI() {
-            document.getElementById('balanceDisplay').innerText = balance.toFixed(2);
-            let hrs = Math.floor(timeLeft / 3600).toString().padStart(2, '0');
-            let mins = Math.floor((timeLeft % 3600) / 60).toString().padStart(2, '0');
-            let secs = (timeLeft % 60).toString().padStart(2, '0');
-            document.getElementById('timerDisplay').innerText = `${hrs}:${mins}:${secs}`;
+    }
+
+    // Sidebar Navigation
+    function openSidebar() { document.getElementById('sidebar').classList.remove('hidden'); }
+    function closeSidebar() { document.getElementById('sidebar').classList.add('hidden'); }
+
+    // Settings View
+    function openSettings() { closeSidebar(); document.getElementById('settingsView').classList.remove('hidden'); }
+    function closeSettings() { document.getElementById('settingsView').classList.add('hidden'); }
+
+    // Top 100 View
+    function openTop100() { 
+        document.getElementById('top100View').classList.remove('hidden'); 
+        renderLeaderboard('weekly');
+    }
+    function closeTop100() { document.getElementById('top100View').classList.add('hidden'); }
+
+    function switchTab(type) {
+        const wBtn = document.getElementById('tabWeekly');
+        const gBtn = document.getElementById('tabGlobal');
+        if (type === 'weekly') {
+            wBtn.className = "flex-1 py-2 rounded-xl bg-yellow-500 text-black font-black text-xs transition";
+            gBtn.className = "flex-1 py-2 rounded-xl text-gray-300 font-bold text-xs transition";
+            renderLeaderboard('weekly');
+        } else {
+            gBtn.className = "flex-1 py-2 rounded-xl bg-yellow-500 text-black font-black text-xs transition";
+            wBtn.className = "flex-1 py-2 rounded-xl text-gray-300 font-bold text-xs transition";
+            renderLeaderboard('global');
         }
-        function connectWallet() {
-            let addr = document.getElementById('walletInput').value.trim();
-            if (addr.length > 10) {
-                walletAddress = addr;
-                document.getElementById('walletSection').classList.add('hidden');
-                document.getElementById('walletConnectedBox').classList.remove('hidden');
-                document.getElementById('connectedAddress').innerText = addr;
-            } else {
-                alert('Please enter a valid BEP-20 wallet address!');
-            }
+    }
+
+    function renderLeaderboard(type) {
+        const list = document.getElementById('leaderboardList');
+        list.innerHTML = '';
+        const count = 15; // sample top items
+        for (let i = 1; i <= count; i++) {
+            const score = type === 'weekly' ? (85400 - i * 3200) : (954000 - i * 45000);
+            list.innerHTML += `
+                <div class="glass-panel p-3 rounded-xl flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <span class="w-6 text-center font-black text-xs text-yellow-400">#${i}</span>
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-sky-400 to-yellow-400 flex items-center justify-center text-xs font-bold text-black">👤</div>
+                        <div>
+                            <h4 class="text-xs font-black text-white">Miner_${i}</h4>
+                            <p class="text-[10px] text-gray-400">@user_${i}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-black text-sky-300">${score.toLocaleString()}</span>
+                        <p class="text-[9px] text-gray-400 font-bold">AK45</p>
+                    </div>
+                </div>
+            `;
         }
-        function disconnectWallet() {
-            walletAddress = "";
-            document.getElementById('walletInput').value = "";
-            document.getElementById('walletConnectedBox').classList.add('hidden');
-            document.getElementById('walletSection').classList.remove('hidden');
+    }
+
+    // 15 Languages Setup
+    const languages = [
+        "Ingliz", "Rus", "O'zbek", "Nemis", "Ispan", 
+        "Fransuz", "Italyan", "Portugal", "Xitoy", "Koreys", 
+        "Yapon", "Turk", "Arab", "Hind", "Indonesia"
+    ];
+    const langListContainer = document.getElementById('langList');
+    languages.forEach(lang => {
+        langListContainer.innerHTML += `
+            <button onclick="selectLanguage('${lang}')" class="w-full text-left px-4 py-3 rounded-xl glass-panel hover:bg-white/10 font-bold text-sm flex items-center justify-between transition">
+                <span>${lang}</span>
+                <span class="text-sky-400 text-xs">Tanlash</span>
+            </button>
+        `;
+    });
+
+    function openLanguageModal() { document.getElementById('languageModal').classList.remove('hidden'); }
+    function closeLanguageModal() { document.getElementById('languageModal').classList.add('hidden'); }
+    function selectLanguage(lang) {
+        document.getElementById('currentLangLabel').innerText = `${lang} >`;
+        closeLanguageModal();
+    }
+
+    // Security Modal Logic
+    function openSecurityModal() { document.getElementById('securityModal').classList.remove('hidden'); }
+    function closeSecurityModal() { document.getElementById('securityModal').classList.add('hidden'); document.getElementById('otpSection').classList.add('hidden'); document.getElementById('securityActionBtn').innerText = "Send Code"; }
+    
+    let otpStep = false;
+    function handleSecurityStep() {
+        const email = document.getElementById('emailInput').value;
+        if (!email) { alert("Please enter your email."); return; }
+        if (!otpStep) {
+            otpStep = true;
+            document.getElementById('otpSection').classList.remove('hidden');
+            document.getElementById('securityActionBtn').innerText = "Verify & Save";
+            alert("Verification code sent to " + email + ".com");
+        } else {
+            const otp = document.getElementById('otpInput').value;
+            if (otp.length < 4) { alert("Please enter valid OTP code."); return; }
+            alert("Security settings updated successfully!");
+            otpStep = false;
+            closeSecurityModal();
         }
-    </script>
+    }
+
+    // Bottom Nav Switcher
+    function switchNav(btn) {
+        const buttons = btn.parentElement.querySelectorAll('button');
+        buttons.forEach(b => {
+            b.classList.remove('text-sky-400');
+            b.classList.add('text-gray-400');
+        });
+        btn.classList.remove('text-gray-400');
+        btn.classList.add('text-sky-400');
+    }
+</script>
 </body>
     </html>
-                                       
+                            <span class="text-gray-400">&gt;</span>
+                </button>
+                <button onclick="alert('Opening Telegram Community Group...')" class="w-full text-left px-4 py-3 rounded-xl glass-panel hover:bg-white/10 flex items-center justify-between text-sm font-bold transition">
+                    <span>TELEGRAM COMMUNITY GROUP</span>
+                    <span class="text-gray-400">&gt;</span>
+                </button>
+            </div>
+        </div>
+
+        <button onclick="closeSidebar()" class="w-full py-3 rounded-xl bg-red-500/20 text-red-400 font-bold text-sm hover:bg-red-500/30 transition">
+            Close Menu
+        </button>
+    </div>
+    <div class="absolute inset-0 -z-10" onclick="closeSidebar()"></div>
+</div>
+
+
+<!-- SETTINGS SUB-VIEW -->
+<div id="settingsView" class="fixed inset-0 z-50 bg-[#0f0c29] p-6 hidden flex flex-col">
+    <div class="flex items-center justify-between mb-6">
+        <button onclick="closeSettings()" class="w-10 h-10 glass-panel rounded-xl flex items-center justify-center font-bold text-lg">&larr;</button>
+        <h2 class="text-lg font-black tracking-wider">SETTINGS</h2>
+        <div class="w-10"></div>
+    </div>
+
+    <div class="space-y-3 flex-1 overflow-y-auto">
+        <button onclick="openLanguageModal()" class="w-full px-4 py-3.5 rounded-2xl glass-panel flex items-center justify-between font-bold text-sm hover:bg-white/10 transition">
+            <span>Select Language</span>
+            <span id="currentLangLabel" class="text-sky-400 text-xs">O'zbek &gt;</span>
+        </button>
+        
+        <div class="w-full px-4 py-3.5 rounded-2xl glass-panel flex items-center justify-between font-bold text-sm">
+            <span>Notifications</span>
+            <input type="checkbox" checked class="w-5 h-5 accent-yellow-400 cursor-pointer">
+        </div>
+
+        <div class="w-full px-4 py-3.5 rounded-2xl glass-panel flex items-center justify-between font-bold text-sm">
+            <span>Sound Effects</span>
+            <input type="checkbox" checked class="w-5 h-5 accent-yellow-400 cursor-pointer">
+        </div>
+
+        <button onclick="openSecurityModal()" class="w-full px-4 py-3.5 rounded-2xl glass-panel flex items-center justify-between font-bold text-sm hover:bg-white/10 transition">
+            <span>Security</span>
+            <span class="text-gray-400">&gt;</span>
+        </button>
+
+        <button onclick="alert('Logged out successfully.')" class="w-full px-4 py-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-between font-bold text-sm hover:bg-red-500/20 transition">
+            <span>Logout</span>
+            <span>&gt;</span>
+        </button>
+
+        <button onclick="confirm('Are you sure you want to delete your account?')" class="w-full px-4 py-3.5 rounded-2xl bg-red-600/20 border border-red-600/30 text-red-500 flex items-center justify-between font-bold text-sm hover:bg-red-600/30 transition">
+            <span>Delete Account</span>
+            <span>&gt;</span>
+        </button>
+    </div>
+</div>
+
+
+<!-- LANGUAGE SELECTOR MODAL -->
+<div id="languageModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-end justify-center">
+    <div class="w-full max-w-md bg-[#141038] rounded-t-3xl p-6 max-h-[80vh] flex flex-col border-t border-white/10">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-black text-base">Select Language</h3>
+            <button onclick="closeLanguageModal()" class="text-gray-400 font-bold text-lg">&times;</button>
+        </div>
+        <div id="langList" class="space-y-2 overflow-y-auto pr-1">
+            <!-- Dynamically populated 15 languages -->
+        </div>
+    </div>
+</div>
+
+
+<!-- SECURITY MODAL (Email & OTP verification) -->
+<div id="securityModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="w-full max-w-sm bg-[#141038] rounded-2xl p-6 border border-white/15">
+        <h3 class="font-black text-base mb-2">Security Verification</h3>
+        <p class="text-xs text-gray-400 mb-4">Protect your mining account by verifying your email address with .com extension.</p>
+        
+        <div class="space-y-3 mb-4">
+            <div class="flex items-center glass-panel rounded-xl px-3 py-2">
+                <input id="emailInput" type="text" placeholder="yourname@gmail" class="bg-transparent text-sm flex-1 outline-none text-white placeholder-gray-500">
+                <span class="text-sm font-bold text-yellow-400">.com</span>
+            </div>
+            <div id="otpSection" class="hidden">
+                <input id="otpInput" type="text" placeholder="Enter 6-digit OTP code" class="w-full glass-panel rounded-xl px-3 py-2 text-sm outline-none text-white placeholder-gray-500 tracking-widest text-center">
+            </div>
+        </div>
+
+        <div class="flex space-x-2">
+            <button onclick="closeSecurityModal()" class="flex-1 py-2.5 rounded-xl bg-white/10 text-xs font-bold hover:bg-white/20 transition">Cancel</button>
+            <button id="securityActionBtn" onclick="handleSecurityStep()" class="flex-1 py-2.5 rounded-xl bg-yellow-400 text-black text-xs font-black hover:bg-yellow-300 transition">Send Code</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- TOP 100 LEADERS VIEW -->
+<div id="top100View" class="fixed inset-0 z-50 bg-[#0f0c29] p-4 hidden flex flex-col">
+    <div class="flex items-center justify-between mb-4">
+        <button onclick="closeTop100()" class="w-10 h-10 glass-panel rounded-xl flex items-center justify-center font-bold text-lg">&larr;</button>
+        <h2 class="text-base font-black tracking-wider">Top 100 Leaders</h2>
+        <div class="w-10"></div>
+    </div>
+
+    <!-- Weekly / Global Tabs -->
+    <div class="flex glass-panel p-1 rounded-2xl mb-4">
+        <button id="tabWeekly" onclick="switchTab('weekly')" class="flex-1 py-2 rounded-xl bg-yellow-500 text-black font-black text-xs transition">Weekly</button>
+        <button id="tabGlobal" onclick="switchTab('global')" class="flex-1 py-2 rounded-xl text-gray-300 font-bold text-xs transition">Global</button>
+    </div>
+
+    <!-- Your Rank Banner -->
+    <div class="glass-panel p-3 rounded-2xl mb-4 text-center">
+        <p class="text-[10px] text-gray-400 uppercase font-bold mb-1">Your Rank</p>
+        <div class="flex justify-around text-xs font-black">
+            <span class="text-sky-400">Global Rank #1877</span>
+            <span class="text-yellow-300">Weekly Rank #6628</span>
+        </div>
+    </div>
+
+    <!-- Leaderboard List -->
+    <div id="leaderboardList" class="flex-1 overflow-y-auto space-y-2 pr-1">
+        <!-- Populated via script -->
+    </div>
+</div>
+
+
+<!-- ==================== JAVASCRIPT LOGIC ==================== -->
+<script>
+    // 1. Generate Floating Sparkles across the whole app
+    const sparkleContainer = document.getElementById('bgSparkles');
+    for (let i = 0; i < 25; i++) {
+        const sp = document.createElement('div');
+        sp.className = 'sparkle';
+        sp.style.width = `${Math.random() * 6 + 3}px`;
+        sp.style.height = sp.style.width;
+        sp.style.left = `${Math.random() * 100}%`;
+        sp.style.top = `${Math.random() * 100}%`;
+        sp.style.animationDuration = `${Math.random() * 3 + 3}s`;
+        sp.style.animationDelay = `${Math.random() * 2}s`;
+        sparkleContainer.appendChild(sp);
+    }
+
+    // Splash screen auto hide after 2.5 seconds
+    setTimeout(() => {
+        const splash = document.getElementById('splashScreen');
+        splash.style.opacity = '0';
+        setTimeout(() => {
+            splash.style.display = 'none';
+            document.getElementById('mainApp').classList.remove('hidden');
+        }, 700);
+    }, 2500);
+
+    // Mining Mechanics state
+    let isMining = false;
+    let balance = 0.00000000;
+    let secondsLeft = 86400; // 24 hours in seconds
+    let timerInterval = null;
+
+    function toggleMining() {
+        const btnContainer = document.getElementById('miningBtnContainer');
+        const btnTitle = document.getElementById('miningBtnTitle');
+        const statusText = document.getElementById('miningStatusText');
+
+        if (!isMining) {
+            // Start mining
+            isMining = true;
+            statusText.innerText = "Active";
+            statusText.className = "text-xs font-bold text-green-400";
+            btnTitle.innerText = "Mining...";
+            btnContainer.classList.add('claim-effect');
+            setTimeout(() => btnContainer.classList.remove('claim-effect'), 800);
+
+            // Start timer and real-time AK45 accumulation (1.875 AK45 per hour = 0.0005208 AK45 per second)
+            timerInterval = setInterval(() => {
+                secondsLeft--;
+                balance += 0.00052083;
+                document.getElementById('balanceDisplay').innerText = balance.toFixed(8);
+
+                let h = Math.floor(secondsLeft / 3600);
+                let m = Math.floor((secondsLeft % 3600) / 60);
+                let s = secondsLeft % 60;
+                document.getElementById('timerDisplay').innerText = 
+                    `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+
+                if (secondsLeft <= 0) {
+                    clearInterval(timerInterval);
+                    isMining = false;
+                    btnTitle.innerText = "Claim AK45";
+                    statusText.innerText = "Completed";
+                }
+            }, 1000);
+        } else if (secondsLeft <= 0) {
+            // Claim reward
+            alert("Successfully claimed 45 AK45 tokens!");
+            secondsLeft = 86400;
+            btnTitle.innerText = "Start Mining";
+            statusText.innerText = "Inactive";
+            statusText.className = "text-xs font-bold text-yellow-400";
+        }
+    }
+
+    // Sidebar Navigation
+    function openSidebar() { document.getElementById('sidebar').classList.remove('hidden'); }
+    function closeSidebar() { document.getElementById('sidebar').classList.add('hidden'); }
+
+    // Settings View
+    function openSettings() { closeSidebar(); document.getElementById('settingsView').classList.remove('hidden'); }
+    function closeSettings() { document.getElementById('settingsView').classList.add('hidden'); }
+
+    // Top 100 View
+    function openTop100() { 
+        document.getElementById('top100View').classList.remove('hidden'); 
+        renderLeaderboard('weekly');
+    }
+    function closeTop100() { document.getElementById('top100View').classList.add('hidden'); }
+
+    function switchTab(type) {
+        const wBtn = document.getElementById('tabWeekly');
+        const gBtn = document.getElementById('tabGlobal');
+        if (type === 'weekly') {
+            wBtn.className = "flex-1 py-2 rounded-xl bg-yellow-500 text-black font-black text-xs transition";
+            gBtn.className = "flex-1 py-2 rounded-xl text-gray-300 font-bold text-xs transition";
+            renderLeaderboard('weekly');
+        } else {
+            gBtn.className = "flex-1 py-2 rounded-xl bg-yellow-500 text-black font-black text-xs transition";
+            wBtn.className = "flex-1 py-2 rounded-xl text-gray-300 font-bold text-xs transition";
+            renderLeaderboard('global');
+        }
+    }
+
+    function renderLeaderboard(type) {
+        const list = document.getElementById('leaderboardList');
+        list.innerHTML = '';
+        const count = 15; // sample top items
+        for (let i = 1; i <= count; i++) {
+            const score = type === 'weekly' ? (85400 - i * 3200) : (954000 - i * 45000);
+            list.innerHTML += `
+                <div class="glass-panel p-3 rounded-xl flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <span class="w-6 text-center font-black text-xs text-yellow-400">#${i}</span>
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-sky-400 to-yellow-400 flex items-center justify-center text-xs font-bold text-black">👤</div>
+                        <div>
+                            <h4 class="text-xs font-black text-white">Miner_${i}</h4>
+                            <p class="text-[10px] text-gray-400">@user_${i}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-black text-sky-300">${score.toLocaleString()}</span>
+                        <p class="text-[9px] text-gray-400 font-bold">AK45</p>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    // 15 Languages Setup
+    const languages = [
+        "Ingliz", "Rus", "O'zbek", "Nemis", "Ispan", 
+        "Fransuz", "Italyan", "Portugal", "Xitoy", "Koreys", 
+        "Yapon", "Turk", "Arab", "Hind", "Indonesia"
+    ];
+    const langListContainer = document.getElementById('langList');
+    languages.forEach(lang => {
+        langListContainer.innerHTML += `
+            <button onclick="selectLanguage('${lang}')" class="w-full text-left px-4 py-3 rounded-xl glass-panel hover:bg-white/10 font-bold text-sm flex items-center justify-between transition">
+                <span>${lang}</span>
+                <span class="text-sky-400 text-xs">Tanlash</span>
+            </button>
+        `;
+    });
+
+    function openLanguageModal() { document.getElementById('languageModal').classList.remove('hidden'); }
+    function closeLanguageModal() { document.getElementById('languageModal').classList.add('hidden'); }
+    function selectLanguage(lang) {
+        document.getElementById('currentLangLabel').innerText = `${lang} >`;
+        closeLanguageModal();
+    }
+
+    // Security Modal Logic
+    function openSecurityModal() { document.getElementById('securityModal').classList.remove('hidden'); }
+    function closeSecurityModal() { document.getElementById('securityModal').classList.add('hidden'); document.getElementById('otpSection').classList.add('hidden'); document.getElementById('securityActionBtn').innerText = "Send Code"; }
+    
+    let otpStep = false;
+    function handleSecurityStep() {
+        const email = document.getElementById('emailInput').value;
+        if (!email) { alert("Please enter your email."); return; }
+        if (!otpStep) {
+            otpStep = true;
+            document.getElementById('otpSection').classList.remove('hidden');
+            document.getElementById('securityActionBtn').innerText = "Verify & Save";
+            alert("Verification code sent to " + email + ".com");
+        } else {
+            const otp = document.getElementById('otpInput').value;
+            if (otp.length < 4) { alert("Please enter valid OTP code."); return; }
+            alert("Security settings updated successfully!");
+            otpStep = false;
+            closeSecurityModal();
+        }
+        }
+    }
+
+    // Bottom Nav Switcher
+    function switchNav(btn) {
+        const buttons = btn.parentElement.querySelectorAll('button');
+        buttons.forEach(b => {
+            b.classList.remove('text-sky-400');
+            b.classList.add('text-gray-400');
+        });
+        btn.classList.remove('text-gray-400');
+        btn.classList.add('text-sky-400');
+    }
+</script>
+</body>
+</html>
+            
